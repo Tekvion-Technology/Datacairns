@@ -1,0 +1,22 @@
+---
+/** The four-pebble cairn mark. */
+interface Props {
+  size?: number | string;
+  color?: string;
+  label?: string;
+}
+const { size = 36, color = '#00D2AA', label } = Astro.props;
+---
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 228 230"
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+>
+  <rect x="0" y="192" width="228" height="37" rx="18.5" fill={color}></rect>
+  <rect x="42" y="125" width="158" height="54" rx="27" fill={color}></rect>
+  <rect x="56" y="63" width="119" height="50" rx="25" fill={color}></rect>
+  <rect x="84" y="3" width="84" height="48" rx="24" fill={color} transform="rotate(-8 126 27)"></rect>
+</svg>

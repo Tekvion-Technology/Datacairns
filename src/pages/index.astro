@@ -1,0 +1,576 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import LogoMark from '../components/LogoMark.astro';
+import Pebbles, { type Pebble } from '../components/Pebbles.astro';
+import { useCases, useCaseHref } from '../data/useCases';
+
+import assistantReady from '../assets/assistant-ready.png';
+import assistantAnswer from '../assets/assistant-answer.png';
+import agentBuilder from '../assets/agent-builder.png';
+import sourcesImg from '../assets/sources-databases.png';
+import logoSharepoint from '../assets/logo-sharepoint.png';
+import logoMysql from '../assets/logo-mysql.png';
+import logoPowerbi from '../assets/logo-powerbi.png';
+import logoOllama from '../assets/logo-ollama.png';
+import logoOracle from '../assets/logo-oracle.png';
+
+const heroPebbles: Pebble[] = [
+  { motion: 'wander', left: '5%', top: '140px', w: 44, h: 26, color: '#00D2AA', r: '-10deg', dx: '40px' },
+  { motion: 'hop', left: '11%', top: '300px', w: 26, h: 16, color: '#070908', r: '8deg', delay: '-1.2s' },
+  { motion: 'roll', left: '3%', top: '420px', w: 34, h: 20, color: '#00D2AA', dx: '90px', delay: '-4s' },
+  { motion: 'wander', left: '16%', top: '200px', w: 18, h: 11, color: '#070908', r: '30deg', dx: '-30px', delay: '-6s' },
+  { motion: 'hop', left: '7%', top: '250px', w: 20, h: 13, color: '#00D2AA', r: '-18deg', delay: '-2.6s' },
+  { motion: 'drift', left: '18%', top: '460px', w: 22, h: 14, color: '#00D2AA', r: '-20deg', delay: '-5s' },
+  { motion: 'wander', right: '6%', top: '150px', w: 38, h: 22, color: '#070908', r: '12deg', dx: '-36px', delay: '-3s' },
+  { motion: 'hop', right: '14%', top: '250px', w: 30, h: 18, color: '#00D2AA', r: '-6deg', delay: '-0.6s' },
+  { motion: 'roll', right: '12%', top: '430px', w: 28, h: 16, color: '#070908', r: '10deg', dx: '-80px', delay: '-8s' },
+  { motion: 'wander', right: '3%', top: '330px', w: 50, h: 28, color: '#00D2AA', r: '6deg', dx: '-28px', delay: '-9s' },
+  { motion: 'hop', right: '8%', top: '300px', w: 16, h: 10, color: '#070908', r: '20deg', delay: '-2s' },
+  { motion: 'drift', right: '18%', top: '120px', w: 20, h: 12, color: '#00D2AA', r: '-14deg', delay: '-7s' },
+];
+const bandPebbles: Pebble[] = [
+  { motion: 'hop', right: '6%', top: '56px', w: 34, h: 20, color: '#00D2AA', r: '-12deg' },
+  { motion: 'wander', right: '11%', top: '100px', w: 20, h: 12, color: '#3A4542', r: '18deg', dx: '-24px', delay: '-4s' },
+  { motion: 'roll', left: '4%', bottom: '60px', w: 26, h: 16, color: '#00D2AA', dx: '70px', delay: '-6s' },
+];
+const ctaPebbles: Pebble[] = [
+  { motion: 'hop', left: '46%', top: '22px', w: 28, h: 17, color: '#070908', r: '-10deg', delay: '-1s' },
+  { motion: 'wander', left: '52%', bottom: '20px', w: 18, h: 11, color: '#FFFFFF', r: '16deg', dx: '30px', delay: '-3s' },
+];
+
+const valueProps = [
+  { k: 'Easy', t: 'Bring your data and AI strategy to life', d: 'Spend less time configuring infrastructure and more time on outcomes, on one fully managed platform.', icon: 'trend' },
+  { k: 'Connected', t: 'Work with the stack you already have', d: 'Open formats and native connectors mean your clouds, databases and BI tools plug straight in.', icon: 'nodes' },
+  { k: 'Sovereign', t: 'Keep your data where it belongs', d: 'Deploy in your cloud or fully in-country, with governance and residency controls built in.', icon: 'shield' },
+];
+
+const capabilities = [
+  { t: 'Lakehouse storage', d: 'Open table formats for structured and unstructured data, one copy for every workload.' },
+  { t: 'Data engineering', d: 'Build reliable batch and streaming pipelines in the language of your choice.' },
+  { t: 'Analytics', d: 'Serverless SQL and dashboards with AI-tuned performance.' },
+  { t: 'AI & ML', d: 'Build, fine-tune and serve models and agents next to your data.' },
+  { t: 'Governance', d: 'Access control, lineage, audit and data residency in one catalog.' },
+  { t: 'Data sharing', d: 'Share live data across teams, clouds and partners without copies.' },
+];
+
+const integrations = [
+  { label: 'SharePoint', img: logoSharepoint, scale: 1.25 },
+  { label: 'MySQL', img: logoMysql, scale: 1 },
+  { label: 'Power BI', img: logoPowerbi, scale: 1 },
+  { label: 'Ollama', img: logoOllama, scale: 1 },
+  { label: 'Oracle', img: logoOracle, scale: 1.55 },
+];
+
+const ecosystem = [
+  { t: 'Partner network', d: 'Technology and services partners who help you connect, migrate and build on Datacairns.', link: 'Become a partner', href: '/contact/', icon: 'people' },
+  { t: 'Developer community', d: 'Docs, quickstarts and a place to ask questions and share what you build.', link: 'Visit the developer center', href: '#', icon: 'code' },
+  { t: 'Core concepts', d: 'Plain-language guides to lakehouses, data governance and AI on your data.', link: 'Explore the guides', href: '#', icon: 'doc' },
+];
+---
+<BaseLayout
+  title="Datacairns · One lakehouse for all your data and AI"
+  description="Store data in open formats, govern it in one place, and ask anything of it with built-in AI. Sovereign deployment in your cloud or in-country."
+>
+  <!-- 1. HERO -->
+  <header class="hero">
+    <Pebbles items={heroPebbles} />
+    <SiteNav variant="hero" />
+    <div class="hero__copy">
+      <h1 aria-label="Data and AI" class="hero__title">
+        <span>Data</span>
+        <span aria-hidden="true" class="hero__mark"><LogoMark size="56%" /></span>
+        <span class="accent">AI</span>
+      </h1>
+      <p class="hero__tag">One lakehouse for all your data and AI</p>
+      <p class="hero__lead lead">Store it in open formats, govern it in one place, and ask anything of it with built-in AI.</p>
+      <div class="hero__ctas stack-mobile">
+        <a href="/contact/?topic=demo" class="btn btn--mint btn--lg">Book a demo</a>
+        <a href="#assistant" class="btn btn--white btn--lg">Meet the AI assistant</a>
+      </div>
+    </div>
+    <div class="hero__shot">
+      <div class="window hero__window">
+        <div class="window__bar"><span></span><span></span><span></span></div>
+        <Image src={assistantReady} alt="The Datacairns assistant, ready for a question" widths={[640, 1000, 1400]} sizes="(max-width: 1000px) 100vw, 1000px" loading="eager" fetchpriority="high" />
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 2. MESSAGE CARD -->
+    <section class="sec sec--message">
+      <div class="wrap message">
+        <div class="message__text">
+          <span class="eyebrow eyebrow--teal" style="font-size:11px">Ready for what's next</span>
+          <span class="message__head">Be ahead of the AI era, with confidence in your data.</span>
+          <span class="message__sub">Trusted, governed data is what makes AI work. See how Datacairns gets you there.</span>
+        </div>
+        <a href="#how-it-works" class="btn btn--mint">See how</a>
+      </div>
+    </section>
+
+    <!-- 3. PLATFORM SPLIT -->
+    <section class="sec sec--platform" id="platform">
+      <div class="wrap split">
+        <div class="split__text">
+          <span class="eyebrow">Platform</span>
+          <h2 class="h-display split__title">Simplify enterprise<br /><span class="accent">data and AI</span></h2>
+          <p class="split__lead">From ingesting and processing data to analyzing it and building AI applications, Datacairns helps you do more with all of your data.</p>
+          <div class="split__ctas">
+            <a href="#how-it-works" class="btn btn--ink">Why Datacairns</a>
+            <a href="#architecture" class="link-arrow eyebrow-link">Explore the platform →</a>
+          </div>
+        </div>
+        <div class="split__shot">
+          <div class="window window--shadow">
+            <div class="window__bar"><span></span><span></span><span></span></div>
+            <Image src={assistantReady} alt="The Datacairns assistant, ready for a question" widths={[560, 900, 1200]} sizes="(max-width: 1100px) 100vw, 640px" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. VALUE PROPS -->
+    <section class="sec sec--values">
+      <div class="wrap grid3">
+        {valueProps.map((v) => (
+          <div class="feature">
+            <svg aria-hidden="true" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00876D" stroke-width="2">
+              {v.icon === 'trend' && <><path d="M6 30 L16 20 L22 26 L34 12"></path><polyline points="26,12 34,12 34,20"></polyline></>}
+              {v.icon === 'nodes' && <><circle cx="10" cy="20" r="5"></circle><circle cx="30" cy="10" r="5"></circle><circle cx="30" cy="30" r="5"></circle><line x1="14.5" y1="18" x2="25.5" y2="12"></line><line x1="14.5" y1="22" x2="25.5" y2="28"></line></>}
+              {v.icon === 'shield' && <><path d="M20 5 L33 10 V20 C33 28 27 33 20 36 C13 33 7 28 7 20 V10 Z"></path><polyline points="14,20 18.5,24.5 26,16"></polyline></>}
+            </svg>
+            <span class="eyebrow eyebrow--teal" style="font-size:11px">{v.k}</span>
+            <span class="feature__t">{v.t}</span>
+            <span class="feature__d">{v.d}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 5. HOW IT WORKS -->
+    <section class="sec sec--how" id="how-it-works">
+      <div class="wrap">
+        <div class="ruled">
+          <span></span>
+          <h2 class="h-display ruled__title">How Datacairns works</h2>
+          <span></span>
+        </div>
+        <p class="how__lead lead">From raw sources to AI answers on one platform, with no copies between a lake, a warehouse and an ML stack.</p>
+        <div class="flow">
+          <div class="flow__step">
+            <span class="flow__k">01 · Sources</span>
+            <span class="flow__d">Databases, SaaS apps, files, IoT and event streams</span>
+            <Image src={sourcesImg} alt="Three database cylinders in black, mint and grey layers" class="flow__img" widths={[300, 600]} sizes="300px" />
+          </div>
+          <div class="flow__arrow" aria-hidden="true"><span>→</span></div>
+          <div class="flow__step">
+            <span class="flow__k">02 · Transform</span>
+            <span class="flow__d">Clean, join and model raw data into analysis-ready tables</span>
+            <svg role="img" aria-label="Raw data blocks pass through a gear and come out as a neatly layered dataset" viewBox="0 0 300 100" class="flow__img"><ellipse cx="55" cy="86" rx="46" ry="7" fill="#E7EBEC"></ellipse><ellipse cx="245" cy="86" rx="46" ry="7" fill="#E7EBEC"></ellipse><path d="M20 20 V80 A35 8 0 0 0 90 80 V20 Z" fill="#F3F5F5"></path><rect x="27" y="58" width="16" height="9" rx="4.5" fill="#070908" transform="rotate(-14 35 62)"></rect><rect x="47" y="64" width="18" height="9" rx="4.5" fill="#00D2AA" transform="rotate(10 56 68)"></rect><rect x="68" y="56" width="14" height="9" rx="4.5" fill="#C1C6C8" transform="rotate(-20 75 60)"></rect><rect x="34" y="40" width="14" height="8" rx="4" fill="#00D2AA" transform="rotate(22 41 44)"></rect><rect x="54" y="44" width="13" height="8" rx="4" fill="#070908" transform="rotate(-8 60 48)"></rect><rect x="70" y="70" width="12" height="7" rx="3.5" fill="#070908" transform="rotate(16 76 73)"></rect><rect x="26" y="72" width="12" height="7" rx="3.5" fill="#C1C6C8" transform="rotate(-6 32 75)"></rect><rect x="62" y="31" width="12" height="7" rx="3.5" fill="#C1C6C8" transform="rotate(30 68 34)"></rect><path d="M20 20 V80 A35 8 0 0 0 90 80 V20" fill="none" stroke="#070908" stroke-width="3" stroke-linejoin="round"></path><ellipse cx="55" cy="20" rx="35" ry="8" fill="#FFFFFF" stroke="#070908" stroke-width="3"></ellipse><line x1="100" y1="50" x2="128" y2="50" stroke="#070908" stroke-width="3" stroke-linecap="round"></line><line x1="172" y1="50" x2="198" y2="50" stroke="#070908" stroke-width="3" stroke-linecap="round"></line><polyline points="191,43 199,50 191,57" fill="none" stroke="#070908" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline><circle cx="150" cy="50" r="20" fill="#FFFFFF" stroke="#070908" stroke-width="3"></circle><circle cx="150" cy="50" r="10.5" fill="none" stroke="#00D2AA" stroke-width="6" stroke-dasharray="4.1 4.15"></circle><circle cx="150" cy="50" r="9" fill="#00D2AA"></circle><circle cx="150" cy="50" r="3.5" fill="#FFFFFF"></circle><path d="M210 20 A35 8 0 0 0 280 20 V40 A35 8 0 0 1 210 40 Z" fill="#D5DCDD"></path><path d="M210 40 A35 8 0 0 0 280 40 V62 A35 8 0 0 1 210 62 Z" fill="#00D2AA"></path><path d="M210 62 A35 8 0 0 0 280 62 V80 A35 8 0 0 1 210 80 Z" fill="#070908"></path><rect x="217" y="25" width="6" height="58" fill="#FFFFFF" opacity="0.28"></rect><path d="M210 40 A35 8 0 0 0 280 40" fill="none" stroke="#FFFFFF" stroke-width="2.5"></path><path d="M210 62 A35 8 0 0 0 280 62" fill="none" stroke="#FFFFFF" stroke-width="2.5"></path><path d="M210 20 V80 A35 8 0 0 0 280 80 V20" fill="none" stroke="#070908" stroke-width="3" stroke-linejoin="round"></path><ellipse cx="245" cy="20" rx="35" ry="8" fill="#FFFFFF" stroke="#070908" stroke-width="3"></ellipse></svg>
+          </div>
+          <div class="flow__arrow" aria-hidden="true"><span>→</span></div>
+          <div class="flow__step flow__step--lake">
+            <span class="flow__k">03 · Datacairns lakehouse</span>
+            <span class="flow__d" style="color:inherit">Open table storage for structured and unstructured data, one copy for every workload</span>
+          </div>
+          <div class="flow__arrow flow__arrow--last" aria-hidden="true"><span>→</span></div>
+          <div class="flow__outs">
+            <div>SQL &amp; BI</div>
+            <div>AI &amp; ML models</div>
+            <div>Agents &amp; apps</div>
+          </div>
+        </div>
+        <div class="govbar">
+          <span class="flow__k">Unified catalog &amp; governance</span>
+          <span>Access control, lineage, audit and data residency across every layer</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. ARCHITECTURE GRID + SPOTLIGHTS -->
+    <section class="sec sec--arch" id="architecture">
+      <div class="wrap">
+        <p class="eyebrow center">The Datacairns platform</p>
+        <h2 class="h-display h-section center arch__title">Streamline your architecture.<br /><span class="accent">Break down data silos.</span></h2>
+        <div class="arch">
+          <div class="arch__grid">
+            {capabilities.map((c) => (
+              <div class="cap">
+                <span class="cap__pebble" aria-hidden="true"></span>
+                <span class="feature__t">{c.t}</span>
+                <span class="feature__d">{c.d}</span>
+              </div>
+            ))}
+          </div>
+          <div class="arch__strip">
+            <span><i aria-hidden="true"></i>Fully managed service</span>
+            <span><i aria-hidden="true"></i>Unified security &amp; governance</span>
+            <span><i aria-hidden="true"></i>Open, multi-cloud ecosystem</span>
+          </div>
+          <div class="spots">
+            <div class="spot spot--mint" id="assistant">
+              <h3 class="h-display spot__t">Cairn assistant</h3>
+              <p class="spot__d">Ask questions in plain language and get governed answers, charts and SQL from your own data.</p>
+              <a href="/contact/" class="btn btn--ink">Discover the assistant</a>
+              <div class="spot__shot">
+                <div class="window__bar"><span></span><span></span><span></span></div>
+                <Image src={assistantAnswer} alt="The Datacairns assistant answering “Show me monthly sales for this year” with a bar chart and the SQL query behind it" widths={[520, 780, 1040, 1560]} sizes="(max-width: 760px) 92vw, 520px" quality={85} class="spot__img" />
+              </div>
+            </div>
+            <div class="spot spot--grey" id="agents">
+              <h3 class="h-display spot__t">Mason agent builder</h3>
+              <p class="spot__d" style="color:var(--slate)">Build AI agents that act on your data, inside your security perimeter.</p>
+              <a href="/contact/" class="btn btn--mint">Explore agents</a>
+              <div class="spot__shot">
+                <div class="window__bar"><span></span><span></span><span></span></div>
+                <Image src={agentBuilder} alt="The Datacairns agent builder running a flow: start, data sources, AI agent, tools and response, with a live progress panel" widths={[520, 780, 1040, 1560]} sizes="(max-width: 760px) 92vw, 520px" quality={85} class="spot__img" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. INTEGRATIONS -->
+    <section class="sec sec--logos">
+      <div class="wrap center" style="max-width:1000px">
+        <p class="eyebrow" style="margin-bottom:22px">Works with the tools you already use</p>
+        <ul class="logos">
+          {integrations.map((i) => (
+            <li><Image src={i.img} alt={i.label} widths={[132, 264]} sizes="132px" style={`transform:scale(${i.scale})`} /></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- 9. USE CASES -->
+    <section class="sec band" id="use-cases" aria-roledescription="carousel" aria-label="Use cases">
+      <Pebbles items={bandPebbles} />
+      <div class="wrap">
+        <div class="band__head">
+          <div>
+            <p class="eyebrow eyebrow--mint" style="margin-bottom:8px">Use cases</p>
+            <h2 class="h-display h-section">What you can build<br /><span class="accent-mint">with Datacairns</span></h2>
+          </div>
+          <div class="band__arrows">
+            <button type="button" class="round round--outline" aria-label="Previous use case" data-uc-prev>
+              <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="11,6 5,12 11,18"></polyline></svg>
+            </button>
+            <button type="button" class="round round--mint" aria-label="Next use case" data-uc-next>
+              <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#070908" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="13,6 19,12 13,18"></polyline></svg>
+            </button>
+          </div>
+        </div>
+        <div aria-live="polite">
+          {useCases.map((u, k) => (
+            <article class="slide" data-uc-slide hidden={k !== 0} aria-roledescription="slide" aria-label={`${k + 1} of ${useCases.length}: ${u.sector}`}>
+              <div class="slide__text">
+                <span class="eyebrow" style="font-size:11px">Example scenario · {u.sector}</span>
+                <h3 class="h-display slide__t">{u.title}</h3>
+                <p class="slide__d">{u.summary}</p>
+                <div class="slide__facts">
+                  <span><strong>Data in:</strong> {u.dataIn}</span>
+                  <span><strong>AI does:</strong> {u.aiDoes}</span>
+                  <span><strong>Team gets:</strong> {u.teamGets}</span>
+                </div>
+                <a href={useCaseHref(u)} class="link-arrow slide__link">Explore this use case →</a>
+              </div>
+              <div class="slide__img ph">
+                {u.photo && <Image src={u.photo} alt="" widths={[480, 800, 1200]} sizes="(max-width: 800px) 100vw, 600px" />}
+              </div>
+            </article>
+          ))}
+        </div>
+        <div class="chips" role="group" aria-label="Choose an industry">
+          {useCases.map((u, k) => (
+            <button type="button" class="chip" data-uc-chip={k} aria-pressed={k === 0 ? 'true' : 'false'}>{u.sector}</button>
+          ))}
+        </div>
+        <p class="band__count" data-uc-count>1 / {useCases.length}</p>
+        <div class="band__cta">
+          <div style="flex:1 1 420px">
+            <h3 class="h-display" style="font-size:24px;margin-bottom:8px">Have a use case in mind?</h3>
+            <p style="margin:0;font-size:15px;line-height:1.55;color:#C9D0CB">Talk to our team about building it on data you can trust.</p>
+          </div>
+          <a href="/contact/" class="btn btn--mint btn--lg btn--block-mobile" style="font-size:13px">Talk to an expert</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. ECOSYSTEM -->
+    <section class="sec sec--eco" id="ecosystem">
+      <div class="wrap">
+        <p class="eyebrow center">Grow with us</p>
+        <h2 class="h-display h-section center" style="margin:10px 0 48px">The Datacairns<br /><span class="accent">ecosystem</span></h2>
+        <div class="grid3">
+          {ecosystem.map((e) => (
+            <div class="feature">
+              <svg aria-hidden="true" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#00876D" stroke-width="2">
+                {e.icon === 'people' && <><circle cx="13" cy="14" r="5"></circle><circle cx="27" cy="14" r="5"></circle><path d="M4 32 C4 25 9 22 13 22 C17 22 20 24 20 28"></path><path d="M20 28 C20 24 23 22 27 22 C31 22 36 25 36 32"></path></>}
+                {e.icon === 'code' && <><polyline points="14,12 6,20 14,28"></polyline><polyline points="26,12 34,20 26,28"></polyline><line x1="22" y1="8" x2="18" y2="32"></line></>}
+                {e.icon === 'doc' && <><rect x="8" y="5" width="24" height="30" rx="3"></rect><line x1="13" y1="13" x2="27" y2="13"></line><line x1="13" y1="19" x2="27" y2="19"></line><line x1="13" y1="25" x2="22" y2="25"></line></>}
+              </svg>
+              <span class="feature__t">{e.t}</span>
+              <span class="feature__d">{e.d}</span>
+              <a href={e.href} class="link-arrow">{e.link} →</a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. ROUNDED CTA over the footer -->
+    <section class="cta-wrap">
+      <div class="wrap cta">
+        <Pebbles items={ctaPebbles} />
+        <div class="cta__lead">
+          <LogoMark size={64} color="#070908" />
+          <span class="h-display cta__t">Your data,<br />ready for AI</span>
+        </div>
+        <div class="cta__btns stack-mobile">
+          <a href="/contact/" class="btn btn--ink">Contact sales</a>
+          <a href="/contact/?topic=demo" class="btn btn--outline">Watch a demo</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter overlap />
+</BaseLayout>
+
+<style>
+  .center { text-align: center; }
+  .sec { padding-left: 24px; padding-right: 24px; }
+
+  /* Hero */
+  .hero { background: var(--porcelain); position: relative; overflow: hidden; }
+  .hero__copy { max-width: 1000px; margin: 0 auto; padding: 64px 24px 44px; text-align: center; position: relative; }
+  .hero__title {
+    margin: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 28px;
+    font-family: var(--font-display); font-weight: 900; font-size: clamp(56px, 8vw, 104px); line-height: 1; text-transform: uppercase;
+  }
+  .hero__mark {
+    width: clamp(56px, 6vw, 84px); height: clamp(56px, 6vw, 84px); border-radius: 50%; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero__tag { margin: 20px 0 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(22px, 2.4vw, 30px); }
+  .hero__lead { margin: 14px auto 0; max-width: 600px; }
+  .hero__ctas { margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .hero__shot { max-width: 1000px; margin: 0 auto; padding: 0 24px; position: relative; }
+  .hero__window { border-bottom: none; border-radius: 14px 14px 0 0; box-shadow: 0 -6px 30px rgba(7, 9, 8, 0.08); }
+  .hero__window .window__bar { height: 32px; padding: 0 14px; gap: 8px; }
+  .hero__window .window__bar span { width: 12px; height: 12px; }
+
+  /* Message card */
+  .sec--message { padding-top: 56px; }
+  .message {
+    border: 1.5px solid var(--porcelain); border-radius: 12px; box-shadow: 0 6px 24px rgba(7, 9, 8, 0.06);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 20px 32px; padding: 28px 32px;
+  }
+  .message__text { flex: 1 1 360px; display: flex; flex-direction: column; gap: 6px; }
+  .message__head { font-weight: 600; font-size: 17px; }
+  .message__sub { font-size: 14px; color: var(--slate); }
+
+  /* Platform split */
+  .sec--platform { padding-top: 96px; padding-bottom: 64px; }
+  .split { display: flex; flex-wrap: wrap; align-items: center; gap: 48px; }
+  .split__text { flex: 1 1 420px; display: flex; flex-direction: column; gap: 18px; }
+  .split__title { font-size: clamp(32px, 3.8vw, 50px); }
+  .split__lead { margin: 0; font-size: 16px; line-height: 1.6; color: var(--slate); max-width: 480px; }
+  .split__ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+  .eyebrow-link { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .split__shot { flex: 1 1 520px; min-width: 0; }
+  .window--shadow { box-shadow: 0 12px 32px rgba(7, 9, 8, 0.14); }
+
+  /* Features */
+  .sec--values { padding-bottom: 72px; }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
+  .feature { display: flex; flex-direction: column; gap: 10px; }
+  .feature__t { font-weight: 600; font-size: 17px; }
+  .feature__d { font-size: 14px; line-height: 1.6; color: var(--slate); }
+
+  /* How it works */
+  .sec--how { padding-top: 32px; padding-bottom: 88px; }
+  .ruled { display: flex; align-items: center; gap: 24px; }
+  .ruled > span { flex: 1; height: 2px; background: var(--ink); }
+  .ruled__title { font-size: clamp(28px, 3.4vw, 44px); text-align: center; }
+  .how__lead { margin: 20px auto 48px; max-width: 640px; text-align: center; }
+  .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 16px; }
+  .flow__step {
+    flex: 1 1 200px; border: 1.5px solid var(--ink); border-radius: 12px; padding: 20px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .flow__step--lake { flex: 1.4 1 240px; background: var(--mint); border-color: var(--mint); align-items: center; justify-content: center; text-align: center; }
+  .flow__k { font-family: var(--font-display); font-weight: 800; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .flow__d { font-size: 14px; color: var(--slate); }
+  .flow__img { display: block; width: 100%; height: 72px; object-fit: contain; margin-top: auto; }
+  .flow__arrow { display: flex; align-items: center; justify-content: center; font-size: 28px; color: var(--slate-2); }
+  .flow__arrow span { display: block; line-height: 1; }
+  /* When the outputs no longer fit beside the lakehouse they drop to their own row, and the last arrow points down to them. */
+  @media (max-width: 1180px) {
+    .flow__arrow--last { flex: 0 0 100%; }
+    .flow__arrow--last span { transform: rotate(90deg); }
+    .flow__outs { flex: 0 0 100%; }
+    .flow__outs div { text-align: left; }
+  }
+  .flow__outs { flex: 1 1 200px; display: flex; flex-direction: column; gap: 10px; }
+  .flow__outs div {
+    border: 1.5px solid var(--ink); border-radius: 12px; padding: 14px 18px;
+    font-family: var(--font-display); font-weight: 800; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .govbar {
+    margin-top: 16px; background: var(--ink); color: #fff; border-radius: 12px; padding: 16px 20px;
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px;
+  }
+  .govbar span:last-child { font-size: 14px; color: var(--line-2); }
+
+  /* Architecture */
+  .sec--arch { padding-bottom: 72px; }
+  .arch__title { margin: 10px 0 40px; }
+  .arch { border: 1.5px solid var(--porcelain); border-radius: 14px; padding: 24px; }
+  .arch__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .cap {
+    border: 1.5px solid var(--porcelain); border-radius: 10px; padding: 24px; min-height: 170px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .cap__pebble { width: 34px; height: 20px; border-radius: 999px; border: 2px solid var(--mint-600); transform: rotate(-8deg); }
+  .arch__strip {
+    margin-top: 16px; background: var(--ink); color: #fff; border-radius: 8px; padding: 12px 20px;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 40px; font-size: 13px;
+  }
+  .arch__strip span { display: flex; align-items: center; gap: 8px; }
+  .arch__strip i { width: 14px; height: 8px; border-radius: 999px; background: var(--mint); }
+  .spots { margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+  .spot { border-radius: 10px; padding: 28px; display: flex; flex-direction: column; gap: 12px; min-height: 380px; overflow: hidden; }
+  .spot .btn { align-self: flex-start; }
+  .spot--mint { background: var(--mint); }
+  .spot--grey { background: var(--porcelain); }
+  .spot__t { font-size: 26px; }
+  .spot__d { margin: 0; font-size: 15px; line-height: 1.55; max-width: 380px; }
+  .spot__shot { margin-top: auto; overflow: hidden; border-radius: 10px 10px 0 0; background: #fff; box-shadow: 0 -4px 20px rgba(7, 9, 8, 0.12); }
+  /* The whole screenshot is shown, scaled to the card width, never cropped. */
+  .spot__img { display: block; width: 100%; height: auto; }
+
+  /* Integrations */
+  .sec--logos { padding-bottom: 88px; }
+  .logos { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 48px; }
+  .logos li { width: 132px; height: 56px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .logos :global(img) { width: 132px; height: 56px; object-fit: contain; display: block; }
+
+  /* Use-case band */
+  .band { background: var(--ink); color: #fff; padding-top: 96px; padding-bottom: 96px; position: relative; overflow: hidden; }
+  .band__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 40px; }
+  .band__arrows { display: flex; gap: 12px; }
+  .round { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .round--outline { border: 1.5px solid #fff; background: transparent; }
+  .round--mint { border: none; background: var(--mint); }
+  .slide { display: flex; flex-wrap: wrap; background: #fff; color: var(--ink); border-radius: 12px; overflow: hidden; }
+  .slide[hidden] { display: none; }
+  .slide__text { flex: 1 1 380px; padding: 40px; display: flex; flex-direction: column; gap: 16px; }
+  .slide__t { font-size: 28px; line-height: 1.05; }
+  .slide__d { margin: 0; font-size: 16px; line-height: 1.6; color: var(--slate); }
+  .slide__facts { display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+  .slide__link { margin-top: auto; }
+  .slide__img { position: relative; overflow: hidden; flex: 1 1 380px; min-height: 340px; border: none; }
+  .slide__img :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; justify-content: center; }
+  .chip {
+    min-height: 40px; border-radius: 999px; padding: 8px 16px; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+    background: transparent; color: #fff; border: 1.5px solid var(--dark-line);
+  }
+  .chip[aria-pressed='true'] { background: var(--mint); color: var(--ink); border-color: var(--mint); }
+  .band__count { display: none; margin: 16px 0 0; text-align: center; font-size: 13px; color: var(--muted-on-dark); }
+  .band__cta {
+    margin-top: 48px; border: 1.5px solid var(--dark-line); border-radius: 12px; padding: 28px 32px;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px;
+  }
+
+  /* Ecosystem */
+  .sec--eco { padding-top: 96px; padding-bottom: 140px; }
+
+  /* CTA banner */
+  .cta-wrap { padding: 0 24px; position: relative; z-index: 1; margin-bottom: -72px; }
+  .cta {
+    background: var(--mint); border-radius: 14px; padding: 44px 48px;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px;
+    position: relative; overflow: hidden;
+  }
+  .cta__lead { display: flex; align-items: center; gap: 20px; position: relative; }
+  .cta__t { font-size: clamp(26px, 3vw, 40px); }
+  .cta__btns { display: flex; flex-wrap: wrap; gap: 12px; position: relative; }
+
+  /* Design D: phones */
+  @media (max-width: 900px) {
+    .flow { flex-direction: column; }
+    .flow__arrow { flex: 0 0 auto; }
+    .flow__arrow span { transform: rotate(90deg); }
+    .flow__step, .flow__outs { flex-basis: auto; }
+  }
+  @media (max-width: 640px) {
+    .sec, .cta-wrap, .hero__copy, .hero__shot { padding-left: 16px; padding-right: 16px; }
+    .hero__copy { padding-top: 40px; }
+    .hero__ctas { flex-direction: column; }
+    .message { padding: 20px; }
+    .message .btn { width: 100%; }
+    .sec--platform { padding-top: 64px; }
+    .split__text, .split__shot { flex-basis: 100%; }
+    .grid3, .arch__grid { grid-template-columns: 1fr 1fr; gap: 24px 16px; }
+    .arch__grid { gap: 12px; }
+    .cap { padding: 16px; min-height: 0; }
+    .arch { padding: 12px; }
+    .spots { grid-template-columns: 1fr; }
+    .spot { padding: 20px; min-height: 0; }
+    .ruled { gap: 12px; }
+    .band { padding-top: 64px; padding-bottom: 64px; }
+    .band__head { margin-bottom: 24px; }
+    .band__arrows { display: none; }
+    .slide { flex-direction: column-reverse; }
+    .slide__text { padding: 24px; flex-basis: auto; }
+    .slide__img { min-height: 220px; flex-basis: auto; }
+    .chips { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; margin-left: -16px; margin-right: -16px; padding: 0 16px 4px; scrollbar-width: none; }
+    .chip { flex: none; }
+    .band__count { display: block; }
+    .band__cta { padding: 24px; }
+    .sec--eco { padding-top: 64px; padding-bottom: 120px; }
+    .cta { padding: 28px 24px; }
+    .cta__btns { width: 100%; flex-direction: column; }
+  }
+  @media (max-width: 420px) {
+    .grid3 { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  const slides = Array.from(document.querySelectorAll<HTMLElement>('[data-uc-slide]'));
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-uc-chip]'));
+  const count = document.querySelector<HTMLElement>('[data-uc-count]');
+  let current = 0;
+  const show = (i: number) => {
+    current = (i + slides.length) % slides.length;
+    slides.forEach((s, k) => (s.hidden = k !== current));
+    chips.forEach((c, k) => c.setAttribute('aria-pressed', String(k === current)));
+    // Keep the active chip visible when the chip row scrolls sideways (phones).
+    const row = chips[0]?.parentElement;
+    const chip = chips[current];
+    if (row && chip && row.scrollWidth > row.clientWidth) {
+      row.scrollTo({ left: chip.offsetLeft - row.offsetLeft - 16, behavior: 'smooth' });
+    }
+    if (count) count.textContent = `${current + 1} / ${slides.length}`;
+  };
+  document.querySelector('[data-uc-prev]')?.addEventListener('click', () => show(current - 1));
+  document.querySelector('[data-uc-next]')?.addEventListener('click', () => show(current + 1));
+  chips.forEach((c, k) => c.addEventListener('click', () => show(k)));
+
+  // Swipe between use cases on touch screens.
+  const track = slides[0]?.parentElement;
+  let startX = 0;
+  track?.addEventListener('touchstart', (e) => (startX = e.touches[0].clientX), { passive: true });
+  track?.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+  });
+</script>

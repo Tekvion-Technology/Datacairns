@@ -1,0 +1,73 @@
+# Strapi 5 + PostgreSQL for Dokploy.
+# Self-host guide: https://strapi.io/blog/how-to-self-host-your-headless-cms-using-docker-compose
+# Routing: Cloudflare Tunnel > Public Hostname > cms.<your-domain> > HTTP > localhost:1337
+# (no Dokploy Domains entry needed). Cloudflare Access should protect /admin.
+
+services:
+  strapi:
+    image: elestio/strapi-production:v5.33.0
+    environment:
+      # https://docs.strapi.io/cms/configurations/environment
+      NODE_ENV: production
+      STRAPI_TELEMETRY_DISABLED: true
+      STRAPI_PLUGIN_I18N_INIT_LOCALE_CODE: en
+      FAST_REFRESH: true
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      # Added: required by Strapi 5 for sessions, API tokens, transfers and encrypted fields
+      APP_KEYS: ${APP_KEYS}
+      API_TOKEN_SALT: ${API_TOKEN_SALT}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: strapi_postgres
+      DATABASE_PORT: 5432
+      DATABASE_NAME: strapi
+      DATABASE_USERNAME: strapi
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      # The image keeps the app in /opt/app (not /srv/app). Persist what changes at runtime.
+      - strapi_src:/opt/app/src
+      - strapi_uploads:/opt/app/public/uploads
+    # Reachable only from this server. The Cloudflare tunnel points at localhost:3220.
+    ports:
+      - "127.0.0.1:3220:1337"
+    depends_on:
+      strapi_postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - "-q"
+        - "--spider"
+        - "http://127.0.0.1:1337"
+      # First boot builds the admin panel, which can take a few minutes.
+      start_period: 120s
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  strapi_postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: strapi
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - strapi_postgres_data:/var/lib/postgresql
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
+      start_period: 3s
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  strapi_src:
+  strapi_uploads:
+  strapi_postgres_data:

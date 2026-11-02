@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "use_cases",
+  "info": { "singularName": "use-case", "pluralName": "use-cases", "displayName": "Use case" },
+  "options": { "draftAndPublish": true },
+  "attributes": {
+    "slug": { "type": "uid", "targetField": "title", "required": true },
+    "sector": { "type": "string", "required": true },
+    "title": { "type": "string", "required": true },
+    "summary": { "type": "text", "required": true },
+    "sub": { "type": "text", "required": true },
+    "tags": { "type": "json" },
+    "dataIn": { "type": "string" },
+    "aiDoes": { "type": "string" },
+    "teamGets": { "type": "string" },
+    "photo": { "type": "media", "multiple": false, "allowedTypes": ["images"] },
+    "alt": { "type": "string" },
+    "tileBg": { "type": "string", "default": "#070908" },
+    "tileLine": { "type": "string", "default": "#3A4542" },
+    "tilePebble": { "type": "string", "default": "#00D2AA" },
+    "challenge": { "type": "text", "required": true },
+    "solution": { "type": "text", "required": true },
+    "points": { "type": "component", "repeatable": true, "component": "usecase.item" },
+    "caps": { "type": "component", "repeatable": true, "component": "usecase.item" },
+    "deep": { "type": "component", "repeatable": true, "component": "usecase.paragraph" },
+    "outcomes": { "type": "component", "repeatable": true, "component": "usecase.outcome" },
+    "order": { "type": "integer", "default": 0 }
+  }
+}

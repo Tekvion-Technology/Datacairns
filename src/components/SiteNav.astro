@@ -1,0 +1,127 @@
+---
+import LogoMark from './LogoMark.astro';
+import { mainNav } from '../data/site';
+
+interface Props {
+  /** 'hero' sits transparent on the porcelain hero; 'bar' is the white bar used on inner pages. */
+  variant?: 'hero' | 'bar';
+  current?: 'contact';
+  /** Let the bar stretch toward the page edges on very wide screens. */
+  wide?: boolean;
+}
+const { variant = 'bar', current, wide = false } = Astro.props;
+---
+<nav aria-label="Main" class:list={['nav', `nav--${variant}`, { 'nav--wide': wide }]}>
+  <div class="nav__inner wrap">
+    <a href="/" aria-label="Datacairns home" class="nav__brand">
+      <LogoMark size={variant === 'hero' ? 36 : 34} />
+      <span class="nav__word">datacairns</span>
+    </a>
+    <div class="nav__links">
+      {mainNav.map((l) => <a href={l.href}>{l.label}</a>)}
+    </div>
+    <div class="nav__actions">
+      <a href="/use-cases/" class="icon-btn nav__search" aria-label="Browse use cases">
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
+      </a>
+      <a href="#" class="nav__signin">Sign in</a>
+      <a href="/contact/" class="btn btn--mint nav__cta" aria-current={current === 'contact' ? 'page' : undefined}>Contact<span class="nav__cta-long">&nbsp;sales</span></a>
+      <button type="button" class="icon-btn nav__menu-btn" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu" data-menu-toggle>
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="17" x2="20" y2="17"></line></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobile-menu" class="nav__mobile" hidden>
+    {mainNav.map((l) => <a href={l.href}>{l.label}<span aria-hidden="true">→</span></a>)}
+    <a href="#">Sign in<span aria-hidden="true">→</span></a>
+    <a href="/contact/" class="btn btn--mint btn--lg">Contact sales</a>
+  </div>
+</nav>
+
+<style>
+  /* Side padding sits on the nav itself so the logo lines up with the page content below. */
+  .nav { position: relative; z-index: 20; padding: 0 24px; }
+  .nav--bar { background: #fff; border-bottom: 1px solid var(--porcelain); }
+  .nav__inner {
+    padding: 18px 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 32px;
+  }
+  .nav--hero .nav__inner { padding-top: 20px; padding-bottom: 20px; }
+  .nav--wide { padding-inline: clamp(24px, 3vw, 64px); }
+  .nav--wide .nav__inner { max-width: none; }
+  .nav__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .nav__word { font-family: var(--font-logo); font-weight: 600; font-size: 25px; letter-spacing: -0.01em; }
+  .nav--hero .nav__word { font-size: 26px; }
+  .nav__links { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 14px; font-weight: 500; flex: 1 1 auto; }
+  .nav__links a { text-decoration: none; }
+  .nav__actions { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+  .nav__signin { text-decoration: none; font-weight: 500; }
+  .nav__cta { font-size: 13px; letter-spacing: 0.04em; padding: 12px 20px; }
+  .nav__menu-btn { display: none; }
+  .nav__mobile { display: none; }
+
+  /* Design D: phones get a sticky bar with logo, Contact and a menu button. */
+  @media (max-width: 900px) {
+    .nav { position: sticky; top: 0; background: #fff; border-bottom: 1px solid var(--porcelain); }
+    .nav--hero { background: var(--porcelain); border-bottom-color: #d5dadb; }
+    .nav, .nav--wide { padding-inline: 16px; }
+    .nav__inner { flex-wrap: nowrap; padding: 12px 0; gap: 12px; }
+    .nav__word { font-size: 22px !important; }
+    .nav__links, .nav__signin, .nav__search { display: none; }
+    .nav__actions { margin-left: auto; gap: 8px; }
+    .nav__cta { padding: 10px 16px; font-size: 12px; }
+    .nav__cta-long { display: none; }
+    .nav__menu-btn { display: inline-flex; }
+    .nav__mobile:not([hidden]) {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      background: #fff;
+      border-bottom: 1px solid var(--porcelain);
+      box-shadow: 0 16px 32px rgba(7, 9, 8, 0.12);
+      padding: 8px 16px 20px;
+    }
+    .nav__mobile a:not(.btn) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 56px;
+      border-bottom: 1px solid var(--porcelain);
+      font-size: 17px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .nav__mobile .btn { margin-top: 16px; }
+  }
+  @media (max-width: 330px) {
+    .nav__cta { display: none; }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.getElementById('mobile-menu');
+  if (btn && menu) {
+    const set = (open: boolean) => {
+      menu.hidden = !open;
+      btn.setAttribute('aria-expanded', String(open));
+      btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    btn.addEventListener('click', () => set(menu.hidden));
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) set(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !menu.hidden) {
+        set(false);
+        btn.focus();
+      }
+    });
+  }
+</script>

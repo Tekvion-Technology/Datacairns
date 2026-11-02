@@ -1,0 +1,163 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteNav from '../../components/SiteNav.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { useCases, useCaseHref } from '../../data/useCases';
+
+const filters = ['All', ...useCases.map((u) => u.sector)];
+---
+<BaseLayout title="Use cases · Datacairns" description="Example scenarios showing how organizations can put trusted data and AI to work with Datacairns.">
+  <SiteNav />
+
+  <main>
+    <header class="head">
+      <div class="wrap">
+        <nav aria-label="Breadcrumb" class="crumbs"><a href="/">Home</a> / <a href="/#ecosystem">Resources</a> / <span>Use cases</span></nav>
+        <h1 class="h-display head__title">Use cases</h1>
+        <p class="head__lead">Example scenarios showing how organizations can put trusted data and AI to work with Datacairns.</p>
+      </div>
+    </header>
+
+    <section class="pad">
+      <div class="wrap">
+        <div class="filters" role="group" aria-label="Filter by industry">
+          {filters.map((f, k) => (
+            <button type="button" class="filter" data-filter={f} aria-pressed={k === 0 ? 'true' : 'false'}>{f}</button>
+          ))}
+        </div>
+        <div class="toolbar">
+          <label class="search">
+            <span class="sr-only">Search use cases</span>
+            <input type="search" placeholder="Search use cases" data-search />
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#070908" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
+          </label>
+          <span class="count" data-count aria-live="polite">{useCases.length} use cases</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="pad list-sec">
+      <div class="wrap">
+        {useCases.map((u, k) => (
+          <article
+            class:list={['item', { 'is-odd': k % 2 === 1 }]}
+            data-item
+            data-sector={u.sector}
+            data-text={[u.title, u.summary, u.sector, ...u.tags].join(' ').toLowerCase()}
+          >
+            <a href={useCaseHref(u)} class="tile" aria-label={u.title} style={`background:${u.tile.bg}`}>
+              <svg aria-hidden="true" class="tile__lines" viewBox="0 0 600 420" preserveAspectRatio="none"><polyline points="80,40 520,170 200,390 80,40" fill="none" stroke={u.tile.line} stroke-width="1.5"></polyline></svg>
+              <span class="pb pb-wander" aria-hidden="true" style={`left:12%;top:9%;width:22px;height:13px;background:${u.tile.pebble};--r:-10deg`}></span>
+              <span class="pb pb-hop" aria-hidden="true" style={`right:12%;bottom:14%;width:18px;height:11px;background:${u.tile.pebble};--r:12deg;animation-delay:-1.3s`}></span>
+              {u.photo && <Image src={u.photo} alt="" widths={[480, 800, 1240]} sizes="(max-width: 700px) 100vw, 620px" />}
+            </a>
+            <div class="item__text">
+              <div class="tags">{u.tags.map((t) => <span class="tag">{t}</span>)}</div>
+              <a href={useCaseHref(u)} class="card-title">{u.title}</a>
+              <p class="item__d">{u.summary}</p>
+            </div>
+          </article>
+        ))}
+        <p class="empty" data-empty hidden>No use cases match. Try another industry or search.</p>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .pad { padding: 0 24px; }
+  .head { padding: 18px 24px 40px; }
+  .crumbs { font-size: 13px; color: var(--slate); }
+  .crumbs a { text-decoration: none; color: var(--slate); }
+  .head__title { margin-top: 44px; font-size: clamp(40px, 5vw, 64px); }
+  .head__lead { margin: 16px 0 0; max-width: 560px; font-size: 16px; line-height: 1.6; color: var(--slate); }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 4px 8px; background: var(--mist); padding: 6px; border-radius: 4px; }
+  .filter {
+    min-height: 44px; border: none; background: transparent; padding: 0 14px; font: inherit; font-size: 13px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.04em; cursor: pointer; color: var(--ink);
+  }
+  .filter[aria-pressed='true'] { color: var(--teal); box-shadow: inset 0 -2px 0 var(--mint); }
+  .toolbar {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 22px 0 32px; border-bottom: 1.5px solid var(--porcelain);
+  }
+  .search { flex: 0 1 560px; display: flex; align-items: center; gap: 10px; border-bottom: 1.5px solid var(--ink); padding: 4px 0; }
+  .search input { flex: 1; min-width: 0; height: 40px; border: none; outline: none; font: inherit; font-size: 14px; background: transparent; }
+  .count { font-size: 13px; color: var(--slate-2); }
+
+  .list-sec { padding-bottom: 64px; }
+  /* Zigzag: even rows offset-centered with the tile above the text, odd rows tile-left / text-right. */
+  .item { border-bottom: 1.5px solid var(--porcelain); padding: 40px 0; display: grid; gap: 14px; grid-template-columns: minmax(0, 300px) minmax(0, 620px); }
+  .item .tile, .item .item__text { grid-column: 2; }
+  .item .item__d { display: none; }
+  .item.is-odd { grid-template-columns: minmax(0, 620px) minmax(0, 1fr); align-items: center; gap: 32px 48px; }
+  .item.is-odd .tile { grid-column: 1; }
+  .item.is-odd .item__text { grid-column: 2; }
+  .item.is-odd .item__d { display: block; }
+  .item[hidden] { display: none; }
+
+  .tile { position: relative; overflow: hidden; height: 420px; display: block; }
+  .tile__lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .tile :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; transition: transform 0.4s ease; }
+  .tile:hover :global(img) { transform: scale(1.03); }
+  .item__text { display: flex; flex-direction: column; gap: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { background: var(--mint); color: var(--ink); border-radius: 999px; padding: 4px 10px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .card-title {
+    font-family: var(--font-display); font-weight: 900; font-size: clamp(18px, 1.7vw, 22px); line-height: 1.2;
+    text-transform: uppercase; text-decoration: none; color: var(--ink);
+  }
+  .card-title:hover { color: var(--teal); }
+  .item__d { margin: 0; max-width: 420px; font-size: 14px; line-height: 1.6; color: var(--slate); }
+  .empty { margin: 0; padding: 64px 0; text-align: center; font-size: 15px; color: var(--slate-2); }
+
+  @media (max-width: 900px) {
+    .item, .item.is-odd { grid-template-columns: 1fr; gap: 14px; }
+    .item .tile, .item .item__text, .item.is-odd .tile, .item.is-odd .item__text { grid-column: 1; }
+    .item .item__d { display: block; }
+    .tile { height: 300px; }
+  }
+  @media (max-width: 640px) {
+    .pad, .head { padding-left: 16px; padding-right: 16px; }
+    .head__title { margin-top: 28px; }
+    .filters { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+    .filter { flex: none; }
+    .tile { height: 240px; }
+    .item { padding: 28px 0; }
+  }
+</style>
+
+<script>
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-item]'));
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+  const search = document.querySelector<HTMLInputElement>('[data-search]')!;
+  const count = document.querySelector<HTMLElement>('[data-count]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  let filter = 'All';
+
+  const apply = () => {
+    const q = search.value.trim().toLowerCase();
+    let n = 0;
+    items.forEach((el) => {
+      const show = (filter === 'All' || el.dataset.sector === filter) && (!q || el.dataset.text!.includes(q));
+      el.hidden = !show;
+      if (show) el.classList.toggle('is-odd', n++ % 2 === 1);
+    });
+    count.textContent = `${n} ${n === 1 ? 'use case' : 'use cases'}`;
+    empty.hidden = n > 0;
+  };
+
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      filter = b.dataset.filter!;
+      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      apply();
+    }),
+  );
+  search.addEventListener('input', apply);
+  apply();
+</script>

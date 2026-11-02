@@ -1,0 +1,162 @@
+---
+import LogoMark from './LogoMark.astro';
+import { contact, footerColumns } from '../data/site';
+
+interface Props {
+  /** Extra top padding when the rounded CTA banner overlaps the footer. */
+  overlap?: boolean;
+}
+const { overlap = false } = Astro.props;
+---
+<footer class:list={['footer', { 'footer--overlap': overlap }]}>
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <div class="footer__logo">
+          <LogoMark size={34} />
+          <span>datacairns</span>
+        </div>
+        <address>
+          {contact.addressLines.map((l) => <>{l}<br /></>)}
+          <a href={contact.phoneHref}>{contact.phone}</a><br />
+          <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        </address>
+        <div class="footer__social">
+          <a href="#" aria-label="Datacairns on LinkedIn">in</a>
+          <a href="#" aria-label="Datacairns on X">X</a>
+          <a href="#" aria-label="Datacairns on YouTube"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="#FFFFFF"><polygon points="8,5 19,12 8,19"></polygon></svg></a>
+          <a href="#" aria-label="Datacairns on Instagram"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="5"></rect><circle cx="12" cy="12" r="3.5"></circle></svg></a>
+        </div>
+      </div>
+
+      {footerColumns.map((col) => (
+        <details class="footer__col" open data-footer-col>
+          <summary>{col.h}</summary>
+          <ul>
+            {col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          </ul>
+        </details>
+      ))}
+
+      <form class="footer__news" data-subscribe novalidate>
+        <span class="footer__news-title">Subscribe to our monthly newsletter</span>
+        <span class="footer__muted">Product news, guides and events, once a month.</span>
+        <label>Business email<input type="email" name="email" autocomplete="email" required /></label>
+        <input class="hp" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <button type="submit" class="btn btn--mint">Subscribe now</button>
+        <p class="footer__status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+
+    <div class="footer__big" aria-hidden="true">datacairns</div>
+    <div class="footer__legal">
+      <span>© {new Date().getFullYear()} Datacairns. All rights reserved.</span>
+      <span>Privacy · Terms · Cookies</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--ink); color: #fff; padding: 112px 24px 40px; overflow: hidden; }
+  .footer--overlap { padding-top: 176px; }
+  .footer__top { display: flex; flex-wrap: wrap; gap: 40px; }
+  .footer__brand { flex: 1 1 200px; display: flex; flex-direction: column; gap: 16px; }
+  .footer__logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-logo); font-weight: 600; font-size: 24px; }
+  address { font-style: normal; font-size: 13px; color: var(--muted-on-dark); line-height: 1.6; }
+  address a { color: var(--porcelain); text-decoration: none; }
+  .footer__social { display: flex; gap: 10px; margin-top: 8px; }
+  .footer__social a {
+    width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--slate);
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; color: #fff; font-weight: 800; font-size: 14px;
+  }
+  .footer__col { flex: 1 1 140px; }
+  .footer__col summary {
+    list-style: none;
+    font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--mint);
+    pointer-events: none;
+  }
+  .footer__col summary::-webkit-details-marker { display: none; }
+  .footer__col ul { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+  .footer__col a { text-decoration: none; color: var(--porcelain); font-size: 14px; }
+  .footer__col a:hover { color: #fff; }
+  .footer__news {
+    flex: 1 1 280px; display: flex; flex-direction: column; gap: 12px;
+    border: 1.5px solid var(--slate); border-radius: 12px; padding: 20px; position: relative;
+  }
+  .footer__news-title { font-weight: 600; }
+  .footer__muted { font-size: 13px; color: var(--muted-on-dark); }
+  .footer__news label { display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--muted-on-dark); }
+  .footer__news input[type='email'] {
+    height: 44px; border: 1.5px solid var(--slate); border-radius: 8px; background: transparent;
+    color: #fff; padding: 0 12px; font: inherit;
+  }
+  .footer__news .btn { font-size: 13px; letter-spacing: 0.05em; }
+  .footer__status { margin: 0; font-size: 13px; color: var(--mint); min-height: 1em; }
+  .footer__status:empty { display: none; }
+  .footer__big {
+    margin-top: 96px; padding-bottom: 28px;
+    font-family: var(--font-logo); font-weight: 600; font-size: clamp(88px, 15vw, 220px);
+    line-height: 1; letter-spacing: -0.04em; color: #18201d; white-space: nowrap;
+  }
+  .footer__legal {
+    padding-top: 24px; border-top: 1.5px solid var(--dark-2);
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;
+    font-size: 12px; color: var(--muted-on-dark);
+  }
+
+  /* Design D: link groups fold into tap-to-open sections. */
+  @media (max-width: 640px) {
+    .footer { padding-left: 16px; padding-right: 16px; }
+    .footer__top { gap: 0; }
+    .footer__brand { flex-basis: 100%; margin-bottom: 24px; }
+    .footer__col { flex-basis: 100%; border-top: 1px solid var(--dark-2); }
+    .footer__col summary {
+      pointer-events: auto; cursor: pointer;
+      min-height: 56px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer__col summary::after { content: '+'; font-size: 20px; color: #fff; }
+    .footer__col[open] summary::after { content: '–'; }
+    .footer__col ul { margin: 0 0 20px; }
+    .footer__news { flex-basis: 100%; margin-top: 24px; }
+    /* "datacairns" is about 4.6em wide, so 19vw keeps it inside the 16px side padding. */
+    .footer__big { margin-top: 56px; font-size: 19vw; }
+  }
+</style>
+
+<script>
+  // Phones start with the footer groups folded.
+  if (window.matchMedia('(max-width: 640px)').matches) {
+    document.querySelectorAll<HTMLDetailsElement>('[data-footer-col]').forEach((d) => (d.open = false));
+  }
+
+  document.querySelectorAll<HTMLFormElement>('[data-subscribe]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('.footer__status')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = form.elements.namedItem('email') as HTMLInputElement;
+      if (!email.checkValidity()) {
+        status.textContent = 'Please enter a valid email address.';
+        email.focus();
+        return;
+      }
+      button.disabled = true;
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        status.textContent = 'Thanks, you are subscribed.';
+      } catch {
+        status.textContent = 'Something went wrong. Please try again.';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+</script>

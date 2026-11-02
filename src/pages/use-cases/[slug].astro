@@ -1,0 +1,226 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteNav from '../../components/SiteNav.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import Pebbles, { type Pebble } from '../../components/Pebbles.astro';
+import { useCases, useCaseHref, type UseCase } from '../../data/useCases';
+
+export function getStaticPaths() {
+  return useCases.map((uc) => ({ params: { slug: uc.slug }, props: { uc } }));
+}
+
+interface Props {
+  uc: UseCase;
+}
+const { uc } = Astro.props;
+const others = useCases.filter((u) => u.slug !== uc.slug);
+const pageUrl = new URL(useCaseHref(uc), Astro.site).toString();
+
+const pebbles: Pebble[] = [
+  { motion: 'wander', left: '16%', top: '40px', w: 30, h: 18, color: '#00D2AA', r: '-10deg', dx: '26px' },
+  { motion: 'hop', left: '35%', bottom: '40px', w: 22, h: 14, color: '#00D2AA', r: '10deg', delay: '-1.5s' },
+  { motion: 'wander', right: '9%', top: '160px', w: 26, h: 16, color: '#00D2AA', r: '14deg', dx: '-24px', delay: '-6s' },
+];
+---
+<BaseLayout title={`${uc.title} · Datacairns use case`} description={uc.sub}>
+  <SiteNav wide />
+
+  <main>
+    <header class="head">
+      <div class="wrap wide">
+        <nav aria-label="Breadcrumb" class="crumbs"><a href="/">Home</a> / <a href="/use-cases/">Use cases</a> / <span>{uc.title}</span></nav>
+        <p class="eyebrow eyebrow--teal head__eyebrow">Use case · {uc.sector}</p>
+        <h1 class="h-display head__title">{uc.title}</h1>
+      </div>
+    </header>
+
+    <section class="heroband">
+      <svg class="deco heroband__lines" aria-hidden="true" viewBox="0 0 1440 460" preserveAspectRatio="none"><polyline points="250,40 1150,250 520,420 250,40" fill="none" stroke="#3A4542" stroke-width="1.5"></polyline><polyline points="900,60 1320,180 1080,400" fill="none" stroke="#3A4542" stroke-width="1.5"></polyline></svg>
+      <Pebbles items={pebbles} />
+      {uc.photo && <Image src={uc.photo} alt="" widths={[320, 640]} sizes="100vw" loading="eager" class="heroband__bg" aria-hidden="true" />}
+      {uc.photo && <Image src={uc.photo} alt={uc.alt} widths={[640, 1024, 1440, 2048]} sizes="(max-width: 1100px) 100vw, 1400px" loading="eager" fetchpriority="high" class="heroband__img" />}
+      <div class="share">
+        <span style="color:var(--slate)">Example scenario · 5 min read</span>
+        <span class="share__links">
+          <span style="font-weight:600">Share</span>
+          <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`} target="_blank" rel="noopener" aria-label="Share on LinkedIn">in</a>
+          <a href={`https://x.com/intent/post?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(uc.title)}`} target="_blank" rel="noopener" aria-label="Share on X">X</a>
+          <button type="button" aria-label="Copy link" data-copy-link>
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#070908" stroke-width="2" stroke-linecap="round"><path d="M10 14 a4 4 0 0 0 5.7 0 l3-3 a4 4 0 0 0 -5.7 -5.7 l-1 1"></path><path d="M14 10 a4 4 0 0 0 -5.7 0 l-3 3 a4 4 0 0 0 5.7 5.7 l1 -1"></path></svg>
+          </button>
+          <span class="share__ok" role="status" aria-live="polite" data-copy-status></span>
+        </span>
+      </div>
+    </section>
+
+    <article class="article">
+      <div class="wrap wide">
+      <div class="article__inner">
+        <p class="h-display article__sub">{uc.sub}</p>
+
+        <p class="lab">The challenge</p>
+        <p class="body">{uc.challenge}</p>
+
+        <p class="lab">The Datacairns solution</p>
+        <p class="body">{uc.solution}</p>
+        <ul class="points">
+          {uc.points.map((pt) => (
+            <li class="body"><span aria-hidden="true" class="points__arrow">→</span><span><strong>{pt.t}</strong>: {pt.d}</span></li>
+          ))}
+        </ul>
+
+        <h2 class="h-display h2">Platform capabilities</h2>
+        <div class="table-scroll">
+          <table class="caps">
+            <thead>
+              <tr><th scope="col" style="width:34%">Capability</th><th scope="col">What it does</th></tr>
+            </thead>
+            <tbody>
+              {uc.caps.map((c) => (
+                <tr><th scope="row">{c.t}</th><td>{c.d}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <h2 class="h-display h2">Deep dive</h2>
+        <div class="deep">
+          {uc.deep.map((p) => <p class="body">{p}</p>)}
+        </div>
+
+        <h2 class="h-display h2">Outcomes at a glance</h2>
+        <div class="outcomes">
+          {uc.outcomes.map((o) => (
+            <div class="outcome"><span class="outcome__n">{o.n}</span><span class="outcome__l">{o.l}</span></div>
+          ))}
+        </div>
+        <p class="note">Illustrative targets for this scenario. Replace with measured results when available.</p>
+
+        <div class="banner">
+          <div style="flex:1 1 320px">
+            <span class="h-display banner__t">Explore this for your organization</span>
+            <span class="banner__d">Talk to our team about your data, your priorities and where to start.</span>
+          </div>
+          <a href="/contact/?topic=sales" class="btn btn--ink btn--lg btn--block-mobile" style="font-size:12px">Contact sales</a>
+        </div>
+      </div>
+      </div>
+    </article>
+
+    <section class="others">
+      <div class="wrap wide">
+        <h2 class="h-display others__title">Other use cases</h2>
+        <div class="others__grid">
+          {others.map((r) => (
+            <a href={useCaseHref(r)} class="other">
+              <div class="other__img ph">
+                {r.photo && <Image src={r.photo} alt="" widths={[400, 800]} sizes="(max-width: 640px) 100vw, 400px" />}
+              </div>
+              <span class="other__sector">Use case · {r.sector}</span>
+              <span class="h-display other__t">{r.title}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  /* Header, article and related cards share the nav's left edge, which tracks the screen width. */
+  .wide { max-width: none; }
+  .head { padding: 18px clamp(24px, 3vw, 64px) 44px; }
+  .crumbs { font-size: 13px; color: var(--slate); }
+  .crumbs a { text-decoration: none; color: var(--slate); }
+  .head__eyebrow { margin: 40px 0 12px; letter-spacing: 0.14em; }
+  .head__title { max-width: 900px; font-size: clamp(36px, 4.6vw, 60px); }
+
+  /* Taller band that grows with the screen; the picture is shown whole (contain), never cropped. */
+  .heroband { position: relative; background: var(--ink); overflow: hidden; height: clamp(560px, 50vw, 960px); }
+  .heroband__lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .heroband__bg { position: absolute; inset: -60px; width: calc(100% + 120px); height: calc(100% + 120px); max-width: none; object-fit: cover; filter: blur(48px) saturate(1.1); }
+  .heroband__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; z-index: 1; }
+  .share {
+    position: absolute; right: 0; bottom: 0; z-index: 2; background: var(--mist); padding: 18px 28px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; font-size: 13px;
+  }
+  .share__links { display: flex; align-items: center; gap: 6px; }
+  .share__links a, .share__links button {
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    text-decoration: none; font-weight: 800; font-size: 13px; border: none; background: transparent; cursor: pointer; padding: 0;
+  }
+  .share__ok { font-size: 12px; color: var(--teal); }
+
+  .article { padding: 72px clamp(24px, 3vw, 64px) 24px; }
+  /* Like G42: the title sits on the page edge and the article column is pushed right of it. */
+  .article__inner { max-width: clamp(760px, 40vw, 960px); margin-left: clamp(0px, 15vw, 420px); }
+  @media (max-width: 1100px) { .article__inner { margin-left: clamp(0px, 8vw, 96px); } }
+  .article__sub { font-size: clamp(22px, 2.4vw, 28px); line-height: 1.2; }
+  .lab { margin: 36px 0 10px; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .body { margin: 0; font-size: 15px; line-height: 1.75; color: var(--slate); }
+  .body strong { color: var(--ink); font-weight: 600; }
+  .points { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .points li { display: flex; gap: 10px; }
+  .points__arrow { color: var(--teal); font-weight: 700; }
+  .h2 { margin: 72px 0 24px; font-size: clamp(26px, 2.8vw, 34px); line-height: 1.05; }
+  .table-scroll { overflow-x: auto; }
+  .caps { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 14px; }
+  .caps th, .caps td { padding: 14px; border: 1.5px solid var(--ink); text-align: left; vertical-align: top; }
+  .caps thead th { padding: 12px 14px; background: var(--ink); color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .caps tbody th { font-family: var(--font-display); font-weight: 800; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .caps td { line-height: 1.6; color: var(--slate); }
+  .deep { display: flex; flex-direction: column; gap: 22px; }
+  .outcomes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1.5px solid var(--ink); border-left: 1.5px solid var(--ink); }
+  .outcome { border-right: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink); padding: 20px 14px; text-align: center; display: flex; flex-direction: column; gap: 6px; }
+  .outcome__n { font-family: var(--font-display); font-weight: 900; font-size: 28px; }
+  .outcome__l { font-size: 13px; line-height: 1.45; color: var(--slate); }
+  .note { margin: 12px 0 0; font-size: 12px; color: var(--slate-2); }
+  .banner {
+    margin-top: 64px; background: var(--mint); border-radius: 14px; padding: 28px 32px;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px;
+  }
+  .banner__t { display: block; font-size: 22px; line-height: 1.1; }
+  .banner__d { display: block; margin-top: 6px; font-size: 14px; }
+
+  .others { padding: 88px clamp(24px, 3vw, 64px) 96px; }
+  .others__title { margin-bottom: 28px; font-size: clamp(22px, 2.4vw, 28px); }
+  .others__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; }
+  .other { text-decoration: none; display: flex; flex-direction: column; gap: 12px; }
+  .other__img { position: relative; overflow: hidden; height: 240px; border-radius: 4px; }
+  .other__img :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+  .other:hover :global(img) { transform: scale(1.03); }
+  .other__sector { font-size: 12px; color: var(--slate-2); }
+  .other__t { font-size: 17px; line-height: 1.2; }
+
+  @media (max-width: 640px) {
+    .head, .article, .others { padding-left: 16px; padding-right: 16px; }
+    .head__eyebrow { margin-top: 28px; }
+    .heroband { height: 300px; }
+    .share { position: static; padding: 12px 16px; justify-content: space-between; }
+    .heroband { display: flex; flex-direction: column; justify-content: flex-end; height: auto; }
+    .heroband__bg { display: none; }
+    .heroband__img { position: relative; height: auto; aspect-ratio: 2048 / 1414; object-fit: cover; }
+    .article { padding-top: 48px; }
+    .article__inner { margin-left: 0; }
+    .outcomes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .banner { padding: 24px; }
+    .others { padding-top: 56px; padding-bottom: 64px; }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-copy-link]');
+  const status = document.querySelector<HTMLElement>('[data-copy-status]');
+  btn?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(location.href);
+      if (status) status.textContent = 'Link copied';
+    } catch {
+      if (status) status.textContent = 'Copy failed';
+    }
+    setTimeout(() => status && (status.textContent = ''), 2500);
+  });
+</script>

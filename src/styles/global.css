@@ -1,0 +1,197 @@
+/* Datacairns design tokens and shared styles (design C: G42 look on Snowflake structure). */
+:root {
+  --mint: #00d2aa;
+  --mint-600: #00a887;
+  --mint-700: #00876d;
+  --teal: #00735c;
+  --ink: #070908;
+  --porcelain: #e7ebec;
+  --mist: #f3f5f5;
+  --line: #d5dadb;
+  --line-2: #c1c6c8;
+  --slate: #3a4244;
+  --slate-2: #4b5355;
+  --dark-line: #3a4542;
+  --dark-2: #2a3032;
+  --muted-on-dark: #a9b1b3;
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-logo: 'Outfit', system-ui, sans-serif;
+  --wrap: 1200px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+a { color: var(--ink); }
+a:hover { color: var(--slate-2); }
+:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Type ---------- */
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--slate-2);
+}
+.eyebrow--teal { color: var(--teal); }
+.eyebrow--mint { color: var(--mint); }
+.h-display {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.h-section { font-size: clamp(30px, 3.6vw, 48px); }
+.accent { color: var(--teal); }
+.accent-mint { color: var(--mint); }
+.lead { font-size: 17px; line-height: 1.55; color: var(--slate); }
+.link-arrow {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--teal);
+  text-decoration: none;
+}
+.link-arrow:hover { color: var(--ink); }
+
+/* ---------- Buttons (G42 pills) ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 13px 22px;
+  border-radius: 999px;
+  border: 1.5px solid transparent;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn--lg { padding: 15px 28px; font-size: 14px; letter-spacing: 0.05em; }
+.btn--mint { background: var(--mint); color: var(--ink); }
+.btn--mint:hover { background: #00c19c; color: var(--ink); }
+.btn--ink { background: var(--ink); color: #fff; }
+.btn--ink:hover { background: #1c2320; color: #fff; }
+.btn--white { background: #fff; color: var(--ink); }
+.btn--white:hover { background: var(--mist); color: var(--ink); }
+.btn--outline { background: transparent; color: var(--ink); border-color: var(--ink); }
+.btn--outline:hover { background: rgba(7, 9, 8, 0.06); color: var(--ink); }
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ink);
+  flex: none;
+}
+
+/* ---------- Image placeholders (until real renders arrive) ---------- */
+.ph {
+  background-color: var(--mist);
+  border: 1.5px solid var(--line-2);
+  background-image:
+    linear-gradient(to top right, transparent calc(50% - 0.75px), var(--line-2) 50%, transparent calc(50% + 0.75px)),
+    linear-gradient(to bottom right, transparent calc(50% - 0.75px), var(--line-2) 50%, transparent calc(50% + 0.75px));
+}
+
+/* ---------- Window chrome around product screenshots ---------- */
+.window { background: #fff; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.window__bar {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px;
+  background: var(--mist);
+  border-bottom: 1px solid var(--porcelain);
+}
+.window__bar span { width: 11px; height: 11px; border-radius: 50%; }
+.window__bar span:nth-child(1) { background: #ff5f57; }
+.window__bar span:nth-child(2) { background: #febc2e; }
+.window__bar span:nth-child(3) { background: #28c840; }
+.window img { display: block; width: 100%; height: auto; }
+
+/* ---------- Pebbles (playful G42 dots, reworked) ---------- */
+.pb { position: absolute; border-radius: 999px; will-change: transform; pointer-events: none; }
+.pb-drift { animation: dcDrift 11s ease-in-out infinite; }
+.pb-wander { animation: dcWander 16s ease-in-out infinite; }
+.pb-hop { animation: dcHop 3.8s ease-in-out infinite; }
+.pb-roll { animation: dcRoll 13s ease-in-out infinite; }
+@keyframes dcDrift {
+  0%, 100% { transform: translate(0, 0) rotate(var(--r, 0deg)); }
+  33% { transform: translate(14px, -18px) rotate(calc(var(--r, 0deg) + 10deg)); }
+  66% { transform: translate(-10px, -6px) rotate(calc(var(--r, 0deg) - 8deg)); }
+}
+@keyframes dcWander {
+  0%, 100% { transform: translate(0, 0) rotate(var(--r, 0deg)); }
+  25% { transform: translate(var(--dx, 30px), -24px) rotate(calc(var(--r, 0deg) + 25deg)); }
+  50% { transform: translate(calc(var(--dx, 30px) * 1.4), 10px) rotate(calc(var(--r, 0deg) + 55deg)); }
+  75% { transform: translate(calc(var(--dx, 30px) * 0.5), 28px) rotate(calc(var(--r, 0deg) + 20deg)); }
+}
+@keyframes dcHop {
+  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)) scale(1, 1); }
+  10% { transform: translateY(0) rotate(var(--r, 0deg)) scale(1.14, 0.84); }
+  35% { transform: translateY(-30px) rotate(calc(var(--r, 0deg) - 14deg)) scale(0.94, 1.06); }
+  58% { transform: translateY(0) rotate(var(--r, 0deg)) scale(1.12, 0.88); }
+  70% { transform: translateY(0) rotate(var(--r, 0deg)) scale(1, 1); }
+}
+@keyframes dcRoll {
+  0% { transform: translateX(0) rotate(var(--r, 0deg)); }
+  50% { transform: translateX(var(--dx, 70px)) rotate(calc(var(--r, 0deg) + 180deg)); }
+  100% { transform: translateX(0) rotate(calc(var(--r, 0deg) + 360deg)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pb-drift, .pb-wander, .pb-hop, .pb-roll { animation: none; }
+}
+@media (max-width: 1100px) { .deco { display: none; } }
+
+/* ---------- Forms ---------- */
+.fld {
+  height: 48px;
+  width: 100%;
+  border: 1.5px solid var(--line-2);
+  border-radius: 8px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  background: #fff;
+}
+.fld:focus { outline: 2px solid var(--mint); outline-offset: 1px; border-color: var(--ink); }
+.fld[aria-invalid='true'] { border-color: #b3261e; }
+textarea.fld { height: 128px; padding: 12px 14px; resize: vertical; }
+.lbl { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: var(--ink); }
+.req { color: var(--teal); }
+.form-error { margin: 0; font-size: 13px; color: #b3261e; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ---------- Phones (design D) ---------- */
+@media (max-width: 640px) {
+  .stack-mobile > .btn, .btn--block-mobile { width: 100%; }
+}

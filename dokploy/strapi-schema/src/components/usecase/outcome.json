@@ -1,0 +1,8 @@
+{
+  "collectionName": "components_usecase_outcomes",
+  "info": { "displayName": "Outcome", "icon": "chartCircle" },
+  "attributes": {
+    "n": { "type": "string", "required": true },
+    "l": { "type": "string", "required": true }
+  }
+}

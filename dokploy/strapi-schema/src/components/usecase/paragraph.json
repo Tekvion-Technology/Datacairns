@@ -1,0 +1,7 @@
+{
+  "collectionName": "components_usecase_paragraphs",
+  "info": { "displayName": "Paragraph", "icon": "align-left" },
+  "attributes": {
+    "text": { "type": "text", "required": true }
+  }
+}

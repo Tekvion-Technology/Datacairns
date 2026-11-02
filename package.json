@@ -1,0 +1,20 @@
+{
+  "name": "datacairn-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy",
+    "check": "tsc --noEmit -p tsconfig.worker.json"
+  },
+  "dependencies": {
+    "astro": "^7.4.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261031.1",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.156.0"
+  }
+}

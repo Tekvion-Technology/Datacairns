@@ -1,0 +1,8 @@
+{
+  "collectionName": "components_usecase_items",
+  "info": { "displayName": "Title and text", "icon": "bulletList" },
+  "attributes": {
+    "t": { "type": "string", "required": true },
+    "d": { "type": "text", "required": true }
+  }
+}

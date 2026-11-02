@@ -1,0 +1,219 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import LogoMark from '../components/LogoMark.astro';
+import Pebbles, { type Pebble } from '../components/Pebbles.astro';
+import { contact } from '../data/site';
+
+const pebbles: Pebble[] = [
+  { motion: 'wander', right: '4%', top: '60px', w: 40, h: 24, color: '#00D2AA', r: '-10deg', dx: '-30px' },
+  { motion: 'hop', right: '9%', top: '250px', w: 24, h: 15, color: '#070908', r: '12deg', delay: '-1.4s' },
+  { motion: 'drift', left: '46%', top: '70px', w: 20, h: 12, color: '#070908', r: '-18deg', delay: '-5s' },
+  { motion: 'hop', left: '40%', top: '280px', w: 30, h: 18, color: '#00D2AA', r: '6deg', delay: '-2.4s' },
+];
+
+const channels = [
+  { t: 'General enquiries', d: 'Questions about Datacairns or how it could fit your organization.', link: contact.email, href: `mailto:${contact.email}`, icon: 'mail' },
+  { t: 'Sales', d: 'Demos, pricing and getting started with Datacairns.', link: contact.sales, href: `mailto:${contact.sales}`, icon: 'mail' },
+  { t: 'Partnerships', d: 'Technology and services partners who want to build with us.', link: contact.partnerships, href: `mailto:${contact.partnerships}`, icon: 'partner' },
+  { t: 'Call us', d: 'Speak to our team directly.', link: contact.phone, href: contact.phoneHref, icon: 'phone' },
+];
+const directions = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Sapphire Tower, Dubai')}`;
+---
+<BaseLayout title="Contact us · Datacairns" description="Talk to the Datacairns team about your data and AI priorities: demos, sales and partnerships.">
+  <SiteNav current="contact" />
+
+  <main class="contact">
+    <Pebbles items={pebbles} />
+    <div class="wrap contact__grid">
+      <div class="contact__left">
+        <nav aria-label="Breadcrumb" class="crumbs"><a href="/">Home</a> <span aria-hidden="true">/</span> <span>Contact us</span></nav>
+        <h1 class="h-display contact__title">Contact us</h1>
+        <p class="contact__lead">Tell us about your data and AI priorities, and our team will get back to you.</p>
+
+        <p class="eyebrow contact__other">Other ways to get in touch</p>
+        <div class="channels">
+          {channels.map((c) => (
+            <div class="channel">
+              <span class="dash-icon" aria-hidden="true">
+                {c.icon === 'mail' && <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#070908" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="1.5"></rect><polyline points="3,6 12,13 21,6"></polyline></svg>}
+                {c.icon === 'partner' && <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#070908" stroke-width="1.6"><circle cx="8" cy="9" r="3"></circle><circle cx="16" cy="9" r="3"></circle><path d="M3 19 C3 15 5 14 8 14 C10 14 12 15 12 17"></path><path d="M12 17 C12 15 14 14 16 14 C19 14 21 15 21 19"></path></svg>}
+                {c.icon === 'phone' && <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#070908" stroke-width="1.6" stroke-linejoin="round"><path d="M5 4 H9 L10.5 8.5 L8.5 10 C9.5 12 12 14.5 14 15.5 L15.5 13.5 L20 15 V19 C20 19.6 19.6 20 19 20 C11 20 4 13 4 5 C4 4.4 4.4 4 5 4 Z"></path></svg>}
+              </span>
+              <span class="channel__t">{c.t}</span>
+              <span class="channel__d">{c.d}</span>
+              <a href={c.href} class="channel__link">{c.link}</a>
+            </div>
+          ))}
+        </div>
+
+        <div class="office">
+          <span class="dash-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#070908" stroke-width="1.6"><path d="M12 21 C12 21 5 14.5 5 9.5 A7 7 0 0 1 19 9.5 C19 14.5 12 21 12 21 Z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg></span>
+          <div class="office__text">
+            <span class="eyebrow" style="color:var(--ink)">Main office</span>
+            <span class="office__addr">{contact.addressLines[0]}<br />{contact.addressLines[1]}</span>
+            <a href={directions} class="channel__link" target="_blank" rel="noopener">Get directions →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact__right">
+        <div class="card">
+          <form class="cform" data-contact-form novalidate>
+            <div>
+              <h2 class="h-display" style="font-size:26px">Talk to our team</h2>
+              <p class="cform__note">Fields marked <span class="req">*</span> are required.</p>
+            </div>
+            <div class="cform__grid">
+              <label class="lbl"><span>First name <span class="req">*</span></span><input class="fld" name="firstName" type="text" autocomplete="given-name" required maxlength="100" /></label>
+              <label class="lbl"><span>Last name <span class="req">*</span></span><input class="fld" name="lastName" type="text" autocomplete="family-name" required maxlength="100" /></label>
+              <label class="lbl"><span>Business email <span class="req">*</span></span><input class="fld" name="email" type="email" autocomplete="email" required maxlength="200" /></label>
+              <label class="lbl"><span>Company <span class="req">*</span></span><input class="fld" name="company" type="text" autocomplete="organization" required maxlength="200" /></label>
+              <label class="lbl">Job title<input class="fld" name="jobTitle" type="text" autocomplete="organization-title" maxlength="200" /></label>
+              <label class="lbl">Phone<input class="fld" name="phone" type="tel" autocomplete="tel" maxlength="50" /></label>
+              <label class="lbl"><span>Country <span class="req">*</span></span>
+                <select class="fld" name="country" required>
+                  <option>United Arab Emirates</option><option>Saudi Arabia</option><option>Qatar</option><option>Other</option>
+                </select>
+              </label>
+              <label class="lbl"><span>How can we help? <span class="req">*</span></span>
+                <select class="fld" name="topic" required>
+                  <option value="">Select…</option><option>Book a demo</option><option>Talk to sales</option><option>Partnership</option><option>Something else</option>
+                </select>
+              </label>
+            </div>
+            <label class="lbl">Message<textarea class="fld" name="message" rows="5" maxlength="5000"></textarea></label>
+            <input class="hp" type="text" name="company_website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <p class="cform__legal">By submitting, you agree that Datacairns will process your details in line with our <a href="#">Privacy Policy</a>.</p>
+            <p class="form-error" role="alert" data-form-error hidden></p>
+            <button type="submit" class="btn btn--mint btn--lg cform__submit">Submit</button>
+          </form>
+
+          <div class="thanks" data-contact-thanks hidden tabindex="-1">
+            <LogoMark size={72} />
+            <h2 class="h-display" style="font-size:30px">Thank you</h2>
+            <p>We've received your message. Someone from our team will be in touch soon.</p>
+            <div class="thanks__btns">
+              <a href="/" class="btn btn--ink">Back to home</a>
+              <button type="button" class="btn btn--outline" data-contact-reset>Send another</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <SiteFooter />
+</BaseLayout>
+
+<style>
+  .contact {
+    background: linear-gradient(var(--porcelain) 0, var(--porcelain) 360px, #fff 360px);
+    position: relative; overflow: hidden; padding: 28px 24px 96px;
+  }
+  .contact__grid { display: flex; flex-wrap: wrap; gap: 48px 64px; position: relative; }
+  .contact__left { flex: 1 1 420px; display: flex; flex-direction: column; }
+  .crumbs { font-size: 13px; color: var(--slate); }
+  .crumbs a { text-decoration: none; color: var(--slate); }
+  .contact__title { margin-top: 36px; font-size: clamp(48px, 6vw, 80px); line-height: 0.95; }
+  .contact__lead { margin: 20px 0 0; max-width: 460px; font-size: 18px; line-height: 1.55; color: var(--slate); }
+  .contact__other { margin: 120px 0 18px; }
+  .channels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 24px; }
+  .channel { display: flex; flex-direction: column; gap: 8px; }
+  .dash-icon { width: 52px; height: 48px; flex: 0 0 52px; border: 1.5px dashed var(--slate-2); display: flex; align-items: center; justify-content: center; }
+  .channel__t { font-weight: 600; font-size: 16px; }
+  .channel__d { font-size: 14px; line-height: 1.5; color: var(--slate); }
+  .channel__link { font-size: 14px; font-weight: 600; color: var(--teal); text-decoration: none; padding: 4px 0; overflow-wrap: anywhere; }
+  .office { margin-top: 36px; border: 1.5px solid var(--porcelain); border-radius: 12px; padding: 22px 24px; display: flex; gap: 16px; align-items: flex-start; }
+  .office__text { display: flex; flex-direction: column; gap: 6px; }
+  .office__addr { font-size: 15px; line-height: 1.55; color: var(--slate); }
+
+  .contact__right { flex: 1 1 520px; min-width: 0; }
+  .card { background: #fff; border-radius: 16px; box-shadow: 0 18px 50px rgba(7, 9, 8, 0.12); padding: 40px; }
+  .cform { display: flex; flex-direction: column; gap: 18px; }
+  .cform__note { margin: 8px 0 0; font-size: 14px; color: var(--slate); }
+  .cform__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .cform__legal { margin: 0; font-size: 12px; line-height: 1.55; color: var(--slate-2); }
+  .cform__legal a { color: var(--teal); }
+  .cform__submit { height: 52px; }
+  .thanks { min-height: 560px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; }
+  .thanks[hidden] { display: none; }
+  .thanks p { margin: 0; max-width: 360px; font-size: 16px; line-height: 1.55; color: var(--slate); }
+  .thanks__btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 8px; }
+
+  @media (max-width: 640px) {
+    .contact { padding: 20px 16px 64px; background: linear-gradient(var(--porcelain) 0, var(--porcelain) 260px, #fff 260px); }
+    .contact__title { margin-top: 24px; }
+    /* Title first, then the form, then the other channels. */
+    .contact__grid { gap: 0; }
+    .contact__left { display: contents; }
+    .contact__left > *, .contact__right { flex: 0 0 100%; }
+    .crumbs, .contact__title, .contact__lead { order: -2; }
+    .contact__right { order: -1; margin-top: 28px; }
+    .contact__other { margin-top: 48px; }
+    .channels { grid-template-columns: 1fr; }
+    .card { padding: 24px 20px; }
+    .cform__grid { grid-template-columns: 1fr; }
+    .thanks { min-height: 400px; }
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]')!;
+  const thanks = document.querySelector<HTMLElement>('[data-contact-thanks]')!;
+  const errorBox = document.querySelector<HTMLElement>('[data-form-error]')!;
+  const submit = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+
+  const showError = (msg: string) => {
+    errorBox.textContent = msg;
+    errorBox.hidden = false;
+  };
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.hidden = true;
+    const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[required]'));
+    fields.forEach((f) => f.setAttribute('aria-invalid', String(!f.checkValidity())));
+    const firstBad = fields.find((f) => !f.checkValidity());
+    if (firstBad) {
+      showError('Please fill in the required fields and use a valid email address.');
+      firstBad.focus();
+      return;
+    }
+
+    submit.disabled = true;
+    submit.textContent = 'Sending…';
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      });
+      if (!res.ok) {
+        const body = (await res.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(body?.error || 'Something went wrong. Please try again.');
+      }
+      form.reset();
+      form.hidden = true;
+      thanks.hidden = false;
+      thanks.focus();
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      submit.disabled = false;
+      submit.textContent = 'Submit';
+    }
+  });
+
+  // Pre-select the topic from links like /contact/?topic=demo
+  const topic = new URLSearchParams(location.search).get('topic');
+  const topics: Record<string, string> = { demo: 'Book a demo', sales: 'Talk to sales', partner: 'Partnership' };
+  if (topic && topics[topic]) (form.elements.namedItem('topic') as HTMLSelectElement).value = topics[topic];
+
+  document.querySelector('[data-contact-reset]')?.addEventListener('click', () => {
+    thanks.hidden = true;
+    form.hidden = false;
+    form.querySelector<HTMLInputElement>('input')?.focus();
+  });
+</script>

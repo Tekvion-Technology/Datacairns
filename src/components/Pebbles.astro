@@ -1,0 +1,39 @@
+---
+/**
+ * Decorative loose pebbles. Each entry is placed absolutely inside the nearest
+ * positioned parent; they hide below 1100px and stop for reduced motion.
+ */
+export interface Pebble {
+  motion: 'drift' | 'wander' | 'hop' | 'roll';
+  w: number;
+  h: number;
+  color: string;
+  left?: string;
+  right?: string;
+  top?: string;
+  bottom?: string;
+  r?: string;
+  dx?: string;
+  delay?: string;
+}
+interface Props {
+  items: Pebble[];
+}
+const { items } = Astro.props;
+const styleFor = (p: Pebble) =>
+  [
+    p.left && `left:${p.left}`,
+    p.right && `right:${p.right}`,
+    p.top && `top:${p.top}`,
+    p.bottom && `bottom:${p.bottom}`,
+    `width:${p.w}px`,
+    `height:${p.h}px`,
+    `background:${p.color}`,
+    p.r && `--r:${p.r}`,
+    p.dx && `--dx:${p.dx}`,
+    p.delay && `animation-delay:${p.delay}`,
+  ]
+    .filter(Boolean)
+    .join(';');
+---
+{items.map((p) => <span class={`deco pb pb-${p.motion}`} aria-hidden="true" style={styleFor(p)}></span>)}
