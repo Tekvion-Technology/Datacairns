@@ -1,10 +1,12 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteNav from '../../components/SiteNav.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
-import { useCases, useCaseHref } from '../../data/useCases';
+import UseCaseImage from '../../components/UseCaseImage.astro';
+import { useCaseHref } from '../../data/useCases';
+import { getUseCases } from '../../data/cms';
 
+const useCases = await getUseCases();
 const filters = ['All', ...useCases.map((u) => u.sector)];
 ---
 <BaseLayout title="Use cases · Datacairns" description="Example scenarios showing how organizations can put trusted data and AI to work with Datacairns.">
@@ -50,7 +52,7 @@ const filters = ['All', ...useCases.map((u) => u.sector)];
               <svg aria-hidden="true" class="tile__lines" viewBox="0 0 600 420" preserveAspectRatio="none"><polyline points="80,40 520,170 200,390 80,40" fill="none" stroke={u.tile.line} stroke-width="1.5"></polyline></svg>
               <span class="pb pb-wander" aria-hidden="true" style={`left:12%;top:9%;width:22px;height:13px;background:${u.tile.pebble};--r:-10deg`}></span>
               <span class="pb pb-hop" aria-hidden="true" style={`right:12%;bottom:14%;width:18px;height:11px;background:${u.tile.pebble};--r:12deg;animation-delay:-1.3s`}></span>
-              {u.photo && <Image src={u.photo} alt="" widths={[480, 800, 1240]} sizes="(max-width: 700px) 100vw, 620px" />}
+              {u.photo && <UseCaseImage src={u.photo} alt="" widths={[480, 800, 1240]} sizes="(max-width: 700px) 100vw, 620px" />}
             </a>
             <div class="item__text">
               <div class="tags">{u.tags.map((t) => <span class="tag">{t}</span>)}</div>

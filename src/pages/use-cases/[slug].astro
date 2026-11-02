@@ -1,12 +1,14 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteNav from '../../components/SiteNav.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import Pebbles, { type Pebble } from '../../components/Pebbles.astro';
-import { useCases, useCaseHref, type UseCase } from '../../data/useCases';
+import UseCaseImage from '../../components/UseCaseImage.astro';
+import { useCaseHref, type UseCase } from '../../data/useCases';
+import { getUseCases } from '../../data/cms';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const useCases = await getUseCases();
   return useCases.map((uc) => ({ params: { slug: uc.slug }, props: { uc } }));
 }
 
@@ -14,7 +16,7 @@ interface Props {
   uc: UseCase;
 }
 const { uc } = Astro.props;
-const others = useCases.filter((u) => u.slug !== uc.slug);
+const others = (await getUseCases()).filter((u) => u.slug !== uc.slug);
 const pageUrl = new URL(useCaseHref(uc), Astro.site).toString();
 
 const pebbles: Pebble[] = [
@@ -38,8 +40,8 @@ const pebbles: Pebble[] = [
     <section class="heroband">
       <svg class="deco heroband__lines" aria-hidden="true" viewBox="0 0 1440 460" preserveAspectRatio="none"><polyline points="250,40 1150,250 520,420 250,40" fill="none" stroke="#3A4542" stroke-width="1.5"></polyline><polyline points="900,60 1320,180 1080,400" fill="none" stroke="#3A4542" stroke-width="1.5"></polyline></svg>
       <Pebbles items={pebbles} />
-      {uc.photo && <Image src={uc.photo} alt="" widths={[320, 640]} sizes="100vw" loading="eager" class="heroband__bg" aria-hidden="true" />}
-      {uc.photo && <Image src={uc.photo} alt={uc.alt} widths={[640, 1024, 1440, 2048]} sizes="(max-width: 1100px) 100vw, 1400px" loading="eager" fetchpriority="high" class="heroband__img" />}
+      {uc.photo && <UseCaseImage src={uc.photo} alt="" widths={[320, 640]} sizes="100vw" loading="eager" class="heroband__bg" aria-hidden="true" />}
+      {uc.photo && <UseCaseImage src={uc.photo} alt={uc.alt} widths={[640, 1024, 1440, 2048]} sizes="(max-width: 1100px) 100vw, 1400px" loading="eager" fetchpriority="high" class="heroband__img" />}
       <div class="share">
         <span style="color:var(--slate)">Example scenario · 5 min read</span>
         <span class="share__links">
@@ -115,7 +117,7 @@ const pebbles: Pebble[] = [
           {others.map((r) => (
             <a href={useCaseHref(r)} class="other">
               <div class="other__img ph">
-                {r.photo && <Image src={r.photo} alt="" widths={[400, 800]} sizes="(max-width: 640px) 100vw, 400px" />}
+                {r.photo && <UseCaseImage src={r.photo} alt="" widths={[400, 800]} sizes="(max-width: 640px) 100vw, 400px" />}
               </div>
               <span class="other__sector">Use case · {r.sector}</span>
               <span class="h-display other__t">{r.title}</span>

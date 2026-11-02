@@ -5,7 +5,11 @@ import SiteNav from '../components/SiteNav.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import LogoMark from '../components/LogoMark.astro';
 import Pebbles, { type Pebble } from '../components/Pebbles.astro';
-import { useCases, useCaseHref } from '../data/useCases';
+import UseCaseImage from '../components/UseCaseImage.astro';
+import { useCaseHref } from '../data/useCases';
+import { getUseCases } from '../data/cms';
+
+const useCases = await getUseCases();
 
 import assistantReady from '../assets/assistant-ready.png';
 import assistantAnswer from '../assets/assistant-answer.png';
@@ -280,7 +284,7 @@ const ecosystem = [
                 <a href={useCaseHref(u)} class="link-arrow slide__link">Explore this use case →</a>
               </div>
               <div class="slide__img ph">
-                {u.photo && <Image src={u.photo} alt="" widths={[480, 800, 1200]} sizes="(max-width: 800px) 100vw, 600px" />}
+                {u.photo && <UseCaseImage src={u.photo} alt="" widths={[480, 800, 1200]} sizes="(max-width: 800px) 100vw, 600px" />}
               </div>
             </article>
           ))}

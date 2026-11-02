@@ -19,7 +19,8 @@ export interface UseCase {
   dataIn: string;
   aiDoes: string;
   teamGets: string;
-  photo?: ImageMetadata;
+  /** Local import (built-in data) or an absolute URL (from the CMS). */
+  photo?: ImageMetadata | string;
   alt: string;
   /** What render to commission when there is no photo yet. */
   imageBrief: string;
@@ -251,7 +252,7 @@ const all: UseCase[] = [
   },
 ];
 
-/** Published use cases. Set `hidden: false` above to publish Retail or Manufacturing. */
-export const useCases = all.filter((u) => !u.hidden);
+/** Built-in use cases, used when the CMS is not configured or cannot be reached. */
+export const fallbackUseCases = all.filter((u) => !u.hidden);
 
 export const useCaseHref = (u: UseCase) => `/use-cases/${u.slug}/`;

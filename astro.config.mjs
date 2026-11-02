@@ -8,4 +8,6 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'ignore',
   build: { format: 'directory' },
+  // Use case photos uploaded in Strapi are optimized at build time.
+  image: { domains: ['stripi.tekvion-me.com'] },
 });

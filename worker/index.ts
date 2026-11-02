@@ -10,6 +10,10 @@ export interface Env {
   ASSETS: Fetcher;
   /** Optional KV namespace for form submissions (see wrangler.jsonc). */
   LEADS?: KVNamespace;
+  /** Strapi base URL, e.g. https://stripi.tekvion-me.com (set in wrangler.jsonc vars). */
+  STRAPI_URL?: string;
+  /** Strapi API token allowed to create Lead entries only (wrangler secret). */
+  STRAPI_LEADS_TOKEN?: string;
 }
 
 type Handler = (request: Request, env: Env, ctx: ExecutionContext) => Promise<Response>;
@@ -117,18 +121,52 @@ function sameOrigin(request: Request): boolean {
 function meta(request: Request) {
   return {
     receivedAt: new Date().toISOString(),
-    country: (request.cf?.country as string | undefined) ?? null,
+    ipCountry: (request.cf?.country as string | undefined) ?? null,
     userAgent: request.headers.get('user-agent'),
   };
 }
 
 /**
- * Saves a submission to KV when the LEADS binding exists, and always logs it
- * (visible with `wrangler tail` or in the dashboard's Workers logs).
+ * Saves a submission to Strapi (Lead collection) and to KV when those are configured,
+ * and always logs it (visible with `wrangler tail` or in the dashboard's Workers logs).
+ * Throws only when Strapi is configured and no other copy was stored, so the visitor sees an error.
  */
 async function store(env: Env, kind: 'contact' | 'subscribe', record: Record<string, unknown>): Promise<void> {
   console.log(JSON.stringify({ kind, ...record }));
-  if (!env.LEADS) return;
-  const key = `${kind}:${record.receivedAt}:${crypto.randomUUID()}`;
-  await env.LEADS.put(key, JSON.stringify(record));
+  let saved = false;
+  if (env.LEADS) {
+    const key = `${kind}:${record.receivedAt}:${crypto.randomUUID()}`;
+    await env.LEADS.put(key, JSON.stringify(record));
+    saved = true;
+  }
+  if (env.STRAPI_URL && env.STRAPI_LEADS_TOKEN) {
+    try {
+      const res = await fetch(`${env.STRAPI_URL.replace(/\/$/, '')}/api/leads`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', authorization: `Bearer ${env.STRAPI_LEADS_TOKEN}` },
+        body: JSON.stringify({ data: toLead(kind, record) }),
+      });
+      if (!res.ok) throw new Error(`Strapi responded ${res.status}`);
+      saved = true;
+    } catch (err) {
+      console.error('Could not save lead to Strapi', err);
+      if (!saved) throw err;
+    }
+  }
+}
+
+/** Maps a form submission onto the Lead content type. Fields it lacks go into the message. */
+function toLead(kind: 'contact' | 'subscribe', r: Record<string, unknown>) {
+  const extra = [['Job title', r.jobTitle], ['Phone', r.phone], ['Country', r.country]]
+    .filter(([, v]) => v)
+    .map(([k, v]) => `${k}: ${v}`);
+  const message = [r.message, ...extra].filter(Boolean).join('\n\n');
+  return {
+    name: [r.firstName, r.lastName].filter(Boolean).join(' ') || undefined,
+    email: r.email,
+    company: r.company || undefined,
+    topic: r.topic || undefined,
+    message: message || undefined,
+    source: kind,
+  };
 }

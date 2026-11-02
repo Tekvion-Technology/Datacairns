@@ -4,6 +4,7 @@
   "main": "worker/index.ts",
   "compatibility_date": "2025-08-01",
   "observability": { "enabled": true },
+  "vars": { "STRAPI_URL": "https://stripi.tekvion-me.com" },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

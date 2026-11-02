@@ -1,0 +1,8 @@
+---
+import { Image } from 'astro:assets';
+
+/** Wraps <Image> so a use case photo can be a local import or a CMS URL. */
+const { src, ...rest } = Astro.props;
+const remote = typeof src === 'string';
+---
+<Image src={src} {...rest} {...(remote ? { inferSize: true } : {})} />
