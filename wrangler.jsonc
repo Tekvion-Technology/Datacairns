@@ -4,7 +4,7 @@
   "main": "worker/index.ts",
   "compatibility_date": "2025-08-01",
   "observability": { "enabled": true },
-  "vars": { "STRAPI_URL": "https://stripi.tekvion-me.com" },
+  "vars": { "STRAPI_URL": "https://stripi.tekvion-me.com", "GITHUB_REPO": "Tekvion-Technology/Datacairns" },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

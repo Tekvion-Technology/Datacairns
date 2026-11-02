@@ -14,6 +14,12 @@ export interface Env {
   STRAPI_URL?: string;
   /** Strapi API token allowed to create Lead entries only (wrangler secret). */
   STRAPI_LEADS_TOKEN?: string;
+  /** Shared secret the Strapi webhook sends in the `x-webhook-secret` header (wrangler secret). */
+  CMS_WEBHOOK_SECRET?: string;
+  /** GitHub token allowed to trigger workflows on GITHUB_REPO (wrangler secret). */
+  GITHUB_DISPATCH_TOKEN?: string;
+  /** "owner/repo" whose deploy workflow rebuilds the site (wrangler.jsonc vars). */
+  GITHUB_REPO?: string;
 }
 
 type Handler = (request: Request, env: Env, ctx: ExecutionContext) => Promise<Response>;
@@ -21,6 +27,7 @@ type Handler = (request: Request, env: Env, ctx: ExecutionContext) => Promise<Re
 const routes: Record<string, Partial<Record<string, Handler>>> = {
   '/api/contact': { POST: handleContact },
   '/api/subscribe': { POST: handleSubscribe },
+  '/api/cms-publish': { POST: handleCmsPublish },
   '/api/health': { GET: async () => json({ ok: true }) },
 };
 
@@ -82,6 +89,27 @@ async function handleSubscribe(request: Request, env: Env): Promise<Response> {
   const email = str(body.email, 200).toLowerCase();
   if (!EMAIL_RE.test(email)) return json({ error: 'Please enter a valid email address.' }, 422);
   await store(env, 'subscribe', { email, ...meta(request) });
+  return json({ ok: true });
+}
+
+/** Strapi publish webhook: asks GitHub to rebuild and redeploy the site. */
+async function handleCmsPublish(request: Request, env: Env): Promise<Response> {
+  const secret = env.CMS_WEBHOOK_SECRET;
+  if (!secret || request.headers.get('x-webhook-secret') !== secret) return json({ error: 'Forbidden' }, 403);
+  if (!env.GITHUB_DISPATCH_TOKEN || !env.GITHUB_REPO) return json({ error: 'Not configured' }, 503);
+  const res = await fetch(`https://api.github.com/repos/${env.GITHUB_REPO}/dispatches`, {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${env.GITHUB_DISPATCH_TOKEN}`,
+      accept: 'application/vnd.github+json',
+      'user-agent': 'datacairns-worker',
+    },
+    body: JSON.stringify({ event_type: 'cms-publish' }),
+  });
+  if (!res.ok) {
+    console.error('GitHub dispatch failed', res.status);
+    return json({ error: 'Could not start the rebuild.' }, 502);
+  }
   return json({ ok: true });
 }
 
