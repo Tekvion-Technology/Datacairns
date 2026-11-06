@@ -45,6 +45,8 @@ const ctaPebbles: Pebble[] = [
   { motion: 'wander', left: '52%', bottom: '20px', w: 18, h: 11, color: '#FFFFFF', r: '16deg', dx: '30px', delay: '-3s' },
 ];
 
+const sources = ['Databases', 'Excel', 'Files', 'SaaS apps', 'Event streams'];
+
 const valueProps = [
   { k: 'Easy', t: 'Bring your data and AI strategy to life', d: 'Spend less time configuring infrastructure and more time on outcomes, on one fully managed platform.', icon: 'trend' },
   { k: 'Connected', t: 'Work with the stack you already have', d: 'Open formats and native connectors mean your clouds, databases and BI tools plug straight in.', icon: 'nodes' },
@@ -116,22 +118,24 @@ const ecosystem = [
       </div>
     </section>
 
-    <!-- 3. PLATFORM SPLIT -->
+    <!-- 3. WHAT IS DATACAIRNS -->
     <section class="sec sec--platform" id="platform">
       <div class="wrap split">
         <div class="split__text">
-          <span class="eyebrow">Platform</span>
-          <h2 class="h-display split__title">Simplify enterprise<br /><span class="accent">data and AI</span></h2>
-          <p class="split__lead">From ingesting and processing data to analyzing it and building AI applications, Datacairns helps you do more with all of your data.</p>
+          <span class="eyebrow">What is Datacairns?</span>
+          <h2 class="h-display split__title">The data warehouse<br /><span class="accent">and lakehouse platform</span></h2>
           <div class="split__ctas">
             <a href="#how-it-works" class="btn btn--ink">Why Datacairns</a>
             <a href="#architecture" class="link-arrow eyebrow-link">Explore the platform →</a>
           </div>
         </div>
-        <div class="split__shot">
-          <div class="window window--shadow">
-            <div class="window__bar"><span></span><span></span><span></span></div>
-            <Image src={assistantReady} alt="The Datacairns assistant, ready for a question" widths={[560, 900, 1200]} sizes="(max-width: 1100px) 100vw, 640px" />
+        <div class="split__body">
+          <p class="split__lead">Datacairns is a data warehouse and data lakehouse platform. It brings your organization's data together in one organized place, ready for reporting and decision-making.</p>
+          <div class="split__sources">
+            <span class="split__label">Connects to any source</span>
+            <ul class="split__chips">
+              {sources.map((s) => <li>{s}</li>)}
+            </ul>
           </div>
         </div>
       </div>
@@ -381,14 +385,17 @@ const ecosystem = [
 
   /* Platform split */
   .sec--platform { padding-top: 96px; padding-bottom: 64px; }
-  .split { display: flex; flex-wrap: wrap; align-items: center; gap: 48px; }
+  .split { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 48px; }
   .split__text { flex: 1 1 420px; display: flex; flex-direction: column; gap: 18px; }
   .split__title { font-size: clamp(32px, 3.8vw, 50px); }
-  .split__lead { margin: 0; font-size: 16px; line-height: 1.6; color: var(--slate); max-width: 480px; }
+  .split__lead { margin: 0; font-size: 16px; line-height: 1.6; color: var(--slate); }
   .split__ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
   .eyebrow-link { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
-  .split__shot { flex: 1 1 520px; min-width: 0; }
-  .window--shadow { box-shadow: 0 12px 32px rgba(7, 9, 8, 0.14); }
+  .split__body { flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
+  .split__sources { display: flex; flex-direction: column; gap: 10px; }
+  .split__label { font-family: var(--font-display); font-weight: 800; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .split__chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .split__chips li { padding: 6px 14px; border: 1px solid #C1C6C8; border-radius: 999px; font-size: 14px; }
 
   /* Features */
   .sec--values { padding-bottom: 72px; }
@@ -521,7 +528,7 @@ const ecosystem = [
     .message { padding: 20px; }
     .message .btn { width: 100%; }
     .sec--platform { padding-top: 64px; }
-    .split__text, .split__shot { flex-basis: 100%; }
+    .split__text, .split__body { flex-basis: 100%; }
     .grid3, .arch__grid { grid-template-columns: 1fr 1fr; gap: 24px 16px; }
     .arch__grid { gap: 12px; }
     .cap { padding: 16px; min-height: 0; }
